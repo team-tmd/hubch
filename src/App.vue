@@ -1,7 +1,6 @@
 <template>
-  <div id="app">
+  <div>
     <NavBar />
-    <!-- ページの内容を表示するのは次の <router-view /> というタグ（＝コンポーネント） -->
     <router-view />
   </div>
 </template>
@@ -17,14 +16,6 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
 * {
   box-sizing: border-box;
 }
