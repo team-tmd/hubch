@@ -28,3 +28,9 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+.sign-in {
+  text-align: center;
+}
+</style>
