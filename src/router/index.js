@@ -3,6 +3,7 @@ import VueRouter from "vue-router"
 import Home from "../views/Home.vue"
 import About from "../views/About.vue"
 import MyPage from "../views/MyPage.vue"
+import ChatRoom from "../components/ChatRoom.vue"
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: "/my-page",
     name: "MyPage",
     component: MyPage,
+  },
+  {
+    path: "components/chat-room/:id",
+    name: "ChatRoom",
+    component: ChatRoom,
   },
 ]
 
