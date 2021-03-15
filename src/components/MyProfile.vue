@@ -36,6 +36,15 @@ export default {
 </script>
 
 <style scoped>
+.my-profile {
+  text-align: center;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
 .rounded {
   border-radius: 50px;
 }
