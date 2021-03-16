@@ -28,11 +28,15 @@ export default {
   methods: {
     setMyNickname() {
       if (this.newMyNickname) {
+        // newMyNicknameに（空欄に）何らかの値が入っている場合
+
         const myNickname = {
           userId: this.user.uid,
           myNickname: this.newMyNickname,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         }
+
+        // ニックネームを保存
         firebase
           .firestore()
           .collection("myNicknames")
@@ -40,12 +44,15 @@ export default {
           .set(myNickname)
           .then((ref) => {
             console.log(ref)
+            // 保存に成功したら MyPage に戻る
             this.$router.push("/my-page")
           })
       } else {
+        // newMyNicknameに（空欄に）何も入力されていない場合
         if (
           confirm("何も入力されていません。ニックネームの編集を中断しますか？")
         ) {
+          // MyPage に戻る
           this.$router.push("/my-page")
         }
       }
