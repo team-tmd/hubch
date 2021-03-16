@@ -6,6 +6,20 @@
     <img :src="user.photoURL" class="rounded" />
     <div>Googleアカウント：{{ user.email }}</div>
     <div>ユーザー名：{{ user.displayName }}</div>
+
+    <div v-if="myNickname">
+      <div>ニックネーム：{{ myNickname }}</div>
+      <router-link to="/edit-my-profile-page">
+        <button>ニックネームを編集する</button>
+      </router-link>
+    </div>
+
+    <div v-else>
+      <div>ニックネーム：まだ設定されていません</div>
+      <router-link to="/edit-my-profile-page">
+        <button>ニックネームを設定する</button>
+      </router-link>
+    </div>
   </div>
 </template>
 
@@ -13,6 +27,12 @@
 import firebase from "firebase"
 
 export default {
+  data() {
+    return {
+      user: {},
+      myNickname: "",
+    }
+  },
   methods: {
     signOut() {
       firebase
@@ -27,10 +47,23 @@ export default {
         })
     },
   },
-  computed: {
-    user() {
-      return firebase.auth().currentUser
-    },
+  created() {
+    // ユーザー情報の取得
+    firebase.auth().onAuthStateChanged((user) => {
+      this.user = user
+
+      // ニックネームを取得
+      firebase
+        .firestore()
+        .collection("myNicknames")
+        .doc(this.user.uid)
+        .get()
+        .then((doc) => {
+          if (doc.data()) {
+            this.myNickname = doc.data().myNickname
+          }
+        })
+    })
   },
 }
 </script>
