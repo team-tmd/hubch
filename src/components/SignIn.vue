@@ -1,7 +1,11 @@
 <template>
   <div class="sign-in">
     <h1>This is sign-in page</h1>
-    <button v-on:click="signIn">ログインする</button>
+    <img
+      src="/images/google_signin_buttons/btn_google_signin_light_normal_web@2x.png"
+      alt="Sign in with Google"
+      v-on:click="signIn"
+    />
   </div>
 </template>
 
