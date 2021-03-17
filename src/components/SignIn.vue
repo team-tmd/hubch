@@ -1,11 +1,12 @@
 <template>
-  <div class="sign-in">
+  <div class="signin">
     <h1>This is sign-in page</h1>
 
     <img
       src="/images/google_signin_buttons/btn_google_signin_light_normal_web@2x.png"
       alt="Sign in with Google"
       v-on:click="signIn"
+      class="signin-image"
       id="google-signin-image"
     />
   </div>
@@ -35,8 +36,14 @@ export default {
 </script>
 
 <style scoped>
-.sign-in {
+.signin {
   text-align: center;
+}
+.signin-image {
+  width: 300px;
+  max-width: 100%;
+  height: auto;
+  background-size: cover;
 }
 #google-signin-image:hover {
   background-image: url("/images/google_signin_buttons/btn_google_signin_light_focus_web@2x.png");
