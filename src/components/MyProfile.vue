@@ -50,19 +50,21 @@ export default {
   created() {
     // ユーザー情報の取得
     firebase.auth().onAuthStateChanged((user) => {
-      this.user = user
+      this.user = user ? user : {}
 
-      // ニックネームを取得
-      firebase
-        .firestore()
-        .collection("myNicknames")
-        .doc(this.user.uid)
-        .get()
-        .then((doc) => {
-          if (doc.data()) {
-            this.myNickname = doc.data().myNickname
-          }
-        })
+      if (user) {
+        // ニックネームを取得
+        firebase
+          .firestore()
+          .collection("myNicknames")
+          .doc(this.user.uid)
+          .get()
+          .then((doc) => {
+            if (doc.data()) {
+              this.myNickname = doc.data().myNickname
+            }
+          })
+      }
     })
   },
 }
