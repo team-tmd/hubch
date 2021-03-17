@@ -6,7 +6,7 @@
       src="/images/google_signin_buttons/btn_google_signin_light_normal_web@2x.png"
       alt="Sign in with Google"
       v-on:click="signIn"
-      class="hover-image"
+      id="google-signin-image"
     />
   </div>
 </template>
@@ -18,7 +18,6 @@ export default {
   methods: {
     signIn() {
       var provider = new firebase.auth.GoogleAuthProvider()
-      // firebase.auth().signInWithRedirect(provider)
 
       firebase
         .auth()
@@ -39,11 +38,11 @@ export default {
 .sign-in {
   text-align: center;
 }
-.hover-image:hover {
+#google-signin-image:hover {
   background-image: url("/images/google_signin_buttons/btn_google_signin_light_focus_web@2x.png");
   background-repeat: no-repeat;
 }
-.hover-image:active {
+#google-signin-image:active {
   background-image: url("/images/google_signin_buttons/btn_google_signin_light_pressed_web@2x.png");
 }
 </style>
