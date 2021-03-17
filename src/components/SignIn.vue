@@ -40,7 +40,10 @@ export default {
   text-align: center;
 }
 .hover-image:hover {
-  background: url("/images/google_signin_buttons/btn_google_signin_light_focus_web@2x.png");
+  background-image: url("/images/google_signin_buttons/btn_google_signin_light_focus_web@2x.png");
   background-repeat: no-repeat;
+}
+.hover-image:active {
+  background-image: url("/images/google_signin_buttons/btn_google_signin_light_pressed_web@2x.png");
 }
 </style>
