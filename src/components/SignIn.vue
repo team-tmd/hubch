@@ -1,10 +1,12 @@
 <template>
   <div class="sign-in">
     <h1>This is sign-in page</h1>
+
     <img
       src="/images/google_signin_buttons/btn_google_signin_light_normal_web@2x.png"
       alt="Sign in with Google"
       v-on:click="signIn"
+      class="hover-image"
     />
   </div>
 </template>
@@ -36,5 +38,9 @@ export default {
 <style scoped>
 .sign-in {
   text-align: center;
+}
+.hover-image:hover {
+  background: url("/images/google_signin_buttons/btn_google_signin_light_focus_web@2x.png");
+  background-repeat: no-repeat;
 }
 </style>
