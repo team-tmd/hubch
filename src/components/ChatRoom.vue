@@ -38,6 +38,23 @@ export default {
   },
 
   created() {
+    // ///Roomリストの表示
+    // const col_rooms = firebase
+    //   .firestore()
+    //   .collection("rooms")
+    //   .doc(this.$route.params.id)
+    //   .collection("messages")
+    //   .orderBy("timestamp")
+    //   .limit(15)
+    // col_rooms.get().then((snapshot) => {
+    //   snapshot.docs.forEach((doc) => {
+    //     this.messages.push({
+    //       id: doc.id,
+    //       ...doc.data(),
+    //     })
+    //   })
+    // })
+
     ///Roomリストの表示
     const col_rooms = firebase
       .firestore()
@@ -45,8 +62,9 @@ export default {
       .doc(this.$route.params.id)
       .collection("messages")
       .orderBy("timestamp")
-      .limit(15)
-    col_rooms.get().then((snapshot) => {
+      .limit(30)
+    col_rooms.onSnapshot((snapshot) => {
+      this.messages.length = 0
       snapshot.docs.forEach((doc) => {
         this.messages.push({
           id: doc.id,
@@ -75,12 +93,6 @@ export default {
           .add(newMessage)
           .catch(function(error) {
             console.error("Error writing new message to database", error)
-          })
-          .then((ref) => {
-            this.messages.push({
-              id: ref.id,
-              ...newMessage,
-            })
           })
           .then(() => {
             this.inputMessage = ""
