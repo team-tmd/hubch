@@ -30,7 +30,7 @@ const routes = [
     component: EditMyProfilePage,
   },
   {
-    path: "components/chat-room/:id",
+    path: "/:id",
     name: "ChatRoom",
     component: ChatRoom,
   },
