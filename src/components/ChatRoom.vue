@@ -3,7 +3,12 @@
     {{ $route.params.id }}
     <section v-for="message in messages" :key="message.id" class="item">
       <!-- <section v-for="(room) in messages" :key="message.id" class="item"> -->
-      <div class="item-message">{{ message.text }}</div>
+      <div v-if="message.text">
+        <div class="item-message">{{ message.text }}</div>
+      </div>
+      <div v-if="message.imageURL">
+        <img class="item-image" :src="message.imageURL" />
+      </div>
     </section>
     <div class="form">
       <!-- New Room作成部分 -->
@@ -15,8 +20,7 @@
         <button type="submit">Send message</button>
       </form>
 
-      <!-- <input type="file" accept="image/*" @change="sendImage" />
-      <img :src="message.imageURL" alt="" id="messageImg" /> -->
+      <input type="file" ref="inputFile" accept="image/*" @change="sendImage" />
     </div>
   </div>
 </template>
@@ -30,31 +34,13 @@ export default {
     return {
       user: "",
       inputMessage: "",
-      inputImage: "",
       messages: [],
       users: [],
-      imageURL: "",
+      file: "",
     }
   },
 
   created() {
-    // ///Roomリストの表示
-    // const col_rooms = firebase
-    //   .firestore()
-    //   .collection("rooms")
-    //   .doc(this.$route.params.id)
-    //   .collection("messages")
-    //   .orderBy("timestamp")
-    //   .limit(15)
-    // col_rooms.get().then((snapshot) => {
-    //   snapshot.docs.forEach((doc) => {
-    //     this.messages.push({
-    //       id: doc.id,
-    //       ...doc.data(),
-    //     })
-    //   })
-    // })
-
     ///Roomリストの表示
     const col_rooms = firebase
       .firestore()
@@ -100,48 +86,68 @@ export default {
       }
     },
 
-    sendImage(file) {
+    sendImage() {
+      const file = this.$refs.inputFile.files[0]
       const quary = firebase
         .firestore()
         .collection("rooms")
         .doc(this.$route.params.id)
         .collection("messages")
-      quary
-        .add({
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        })
-        .then(function(messageRef) {
-          const filePath =
-            firebase.auth().currentUser.uid +
-            "/" +
-            messageRef.id +
-            "/" +
-            file.name
+      const strageRef = firebase
+        .storage()
+        .ref()
+        .child("rooms/" + this.$route.params.id + "/messages")
 
-          return firebase
-            .storage()
-            .ref(filePath)
-            .put(file)
-            .then(function(fileSnapshot) {
-              //return fileSnapshote.ref.getDownloadURL().then((url) => {
-              fileSnapshot.ref.getDownloadURL().then((url) => {
-                //return messageRef.update({
-                messageRef.update({
-                  imageURL: url,
-                  //text: url,
-                  storageUrl: fileSnapshot.metadata.fullPath,
-                  //text: fileSnapshote.metadata.fullPath,
-                })
-              })
-            })
+      strageRef.put(file).then((fileSnapshote) =>
+        fileSnapshote.ref.getDownloadURL().then(function(url) {
+          quary.add({
+            imageURL: url,
+            timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+          })
         })
-        .catch(function(error) {
-          console.error(
-            "There was an error uploading a file to Cloud Strage",
-            error
-          )
-        })
+      )
     },
+
+    // sendImage(file) {
+    //   const quary = firebase
+    //     .firestore()
+    //     .collection("rooms")
+    //     .doc(this.$route.params.id)
+    //     .collection("messages")
+    //   quary
+    //     .add({
+    //       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    //     })
+    //     .then(function(messageRef) {
+    //       const filePath =
+    //         firebase.auth().currentUser.uid +
+    //         "/" +
+    //         messageRef.id +
+    //         "/" +
+    //         file.name
+
+    //       return firebase
+    //         .storage()
+    //         .ref(filePath)
+    //         .put(file)
+    //         .then(function(fileSnapshot) {
+    //           //return fileSnapshote.ref.getDownloadURL().then((url) => {
+    //           fileSnapshot.ref.getDownloadURL().then((url) => {
+    //             //return messageRef.update({
+    //             messageRef.update({
+    //               imageURL: url,
+    //               storageUrl: fileSnapshot.metadata.fullPath,
+    //             })
+    //           })
+    //         })
+    //     })
+    //     .catch(function(error) {
+    //       console.error(
+    //         "There was an error uploading a file to Cloud Strage",
+    //         error
+    //       )
+    //     })
+    // },
   },
 }
 </script>
@@ -171,6 +177,10 @@ export default {
   background: #deefe8;
   border-radius: 4px;
   line-height: 1.2em;
+}
+.item-image {
+  width: 50%;
+  height: 50%;
 }
 .form {
   position: fixed;
