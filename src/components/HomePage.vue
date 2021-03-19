@@ -33,19 +33,20 @@ export default {
 
   created() {
     ///Roomリストの表示
-    const col_rooms = firebase
+    firebase
       .firestore()
       .collection("rooms")
       .orderBy("timestamp")
       .limit(15)
-    col_rooms.get().then((snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        this.rooms.push({
-          id: doc.id,
-          ...doc.data(),
+      .onSnapshot((snapshot) => {
+        this.rooms.length = 0
+        snapshot.docs.forEach((doc) => {
+          this.rooms.push({
+            id: doc.id,
+            ...doc.data(),
+          })
         })
       })
-    })
   },
   methods: {
     toChatRoom(roomID) {
@@ -68,12 +69,6 @@ export default {
           .add(newRoom)
           .catch(function(error) {
             console.error("Error writing new message to database", error)
-          })
-          .then((ref) => {
-            this.rooms.push({
-              id: ref.id,
-              ...newRoom,
-            })
           })
           .then(() => {
             this.newRoom_input = ""
