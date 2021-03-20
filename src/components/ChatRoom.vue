@@ -1,6 +1,14 @@
 <template>
   <div>
-    <section v-for="message in messages" :key="message.id" class="item">
+    <section
+      v-for="(message, index) in messages"
+      :key="message.id"
+      class="item"
+    >
+      <div v-if="nicknames[index]">
+        {{ nicknames[index] }}
+      </div>
+
       <!-- メッセージがテキストの場合 -> テキストを表示 -->
       <div v-if="message.text">
         <div class="item-message">{{ message.text }}</div>
@@ -33,12 +41,24 @@ import firebase from "firebase"
 export default {
   data() {
     return {
+      // 入力欄の文字
       inputMessage: "",
+
       messages: [],
+      nickname: "",
+      nicknames: [],
+
+      // ログインしているユーザー(自分)の情報
+      currentUser: {},
     }
   },
 
   created() {
+    // ログイン状態を識別
+    firebase.auth().onAuthStateChanged((user) => {
+      this.currentUser = user ? user : {}
+    })
+
     ///チャットの表示（onSnapshotoで変化を監視）
     const col_rooms = firebase
       .firestore()
@@ -49,9 +69,12 @@ export default {
       .limit(30)
     col_rooms.onSnapshot((snapshot) => {
       this.messages.length = 0
+      this.nicknames.length = 0
       snapshot.docs.forEach((doc) => {
+        this.userIdToNickname(doc.data().userId)
         this.messages.push({
           id: doc.id,
+          // nickname: this.nickname,
           ...doc.data(),
         })
       })
@@ -61,6 +84,32 @@ export default {
   },
 
   methods: {
+    // docToMessages(messageDoc) {
+    //   firebase
+    //     .firestore()
+    //     .collection("myNicknames")
+    //     .doc(messageDoc.data().userId)
+    //     .get()
+    //     .then((doc) => {
+    //       if (doc.data()) {
+    //         this.nickname = doc.data().myNickname
+    //         this.messages.push({
+    //           id: messageDoc.id,
+    //           nickname: this.nickname,
+    //           ...messageDoc.data(),
+    //         })
+    //         // return doc.data().myNickname
+    //       } else {
+    //         this.nickname = ""
+    //         this.messages.push({
+    //           id: messageDoc.id,
+    //           nickname: this.nickname,
+    //           ...messageDoc.data(),
+    //         })
+    //       }
+    //     })
+    // },
+
     // スクロール位置を一番下に移動
     scrollBottom() {
       this.$nextTick(() => {
@@ -78,8 +127,8 @@ export default {
           .collection("messages")
 
         const newMessage = {
+          userId: this.currentUser.uid,
           text: this.inputMessage,
-          //owner:
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
@@ -110,11 +159,32 @@ export default {
       strageRef.put(file).then((fileSnapshote) =>
         fileSnapshote.ref.getDownloadURL().then(function(url) {
           quary.add({
+            userId: this.currentUser.uid,
             imageURL: url,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           })
         })
       )
+    },
+
+    // userIdからニックネームを取得
+    userIdToNickname(userId) {
+      firebase
+        .firestore()
+        .collection("myNicknames")
+        .doc(userId)
+        .get()
+        .then((doc) => {
+          if (doc.data()) {
+            this.nickname = doc.data().myNickname
+            this.nicknames.push(this.nickname)
+            // return doc.data().myNickname
+          } else {
+            this.nickname = ""
+            this.nicknames.push(this.nickname)
+          }
+        })
+      // return this.nickname
     },
   },
 }
