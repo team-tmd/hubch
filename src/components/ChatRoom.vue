@@ -45,7 +45,6 @@ export default {
       inputMessage: "",
 
       messages: [],
-      nickname: "",
       nicknames: [],
 
       // ログインしているユーザー(自分)の情報
@@ -74,7 +73,6 @@ export default {
         this.userIdToNickname(doc.data().userId)
         this.messages.push({
           id: doc.id,
-          // nickname: this.nickname,
           ...doc.data(),
         })
       })
@@ -84,32 +82,6 @@ export default {
   },
 
   methods: {
-    // docToMessages(messageDoc) {
-    //   firebase
-    //     .firestore()
-    //     .collection("myNicknames")
-    //     .doc(messageDoc.data().userId)
-    //     .get()
-    //     .then((doc) => {
-    //       if (doc.data()) {
-    //         this.nickname = doc.data().myNickname
-    //         this.messages.push({
-    //           id: messageDoc.id,
-    //           nickname: this.nickname,
-    //           ...messageDoc.data(),
-    //         })
-    //         // return doc.data().myNickname
-    //       } else {
-    //         this.nickname = ""
-    //         this.messages.push({
-    //           id: messageDoc.id,
-    //           nickname: this.nickname,
-    //           ...messageDoc.data(),
-    //         })
-    //       }
-    //     })
-    // },
-
     // スクロール位置を一番下に移動
     scrollBottom() {
       this.$nextTick(() => {
@@ -176,15 +148,11 @@ export default {
         .get()
         .then((doc) => {
           if (doc.data()) {
-            this.nickname = doc.data().myNickname
-            this.nicknames.push(this.nickname)
-            // return doc.data().myNickname
+            this.nicknames.push(doc.data().myNickname)
           } else {
-            this.nickname = ""
-            this.nicknames.push(this.nickname)
+            this.nicknames.push("")
           }
         })
-      // return this.nickname
     },
   },
 }
