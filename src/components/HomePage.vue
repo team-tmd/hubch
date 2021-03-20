@@ -17,22 +17,18 @@
 </template>
 
 <script>
-// firebase モジュール
 import firebase from "firebase"
-// import chatRoom from "chatRoom"
 
 export default {
   data() {
     return {
-      user: "",
       newRoom_input: "",
       rooms: [],
-      users: [],
     }
   },
 
   created() {
-    ///Roomリストの表示
+    ///Roomリストの表示（onSnapshotで変化を監視）
     firebase
       .firestore()
       .collection("rooms")
@@ -49,14 +45,15 @@ export default {
       })
   },
   methods: {
+    // ChatRoom.vueへ"room.id"と"room.title"をルートで渡す
     toChatRoom(roomID) {
-      console.log(roomID)
       this.$router.push({
         name: "ChatRoom",
         params: { id: roomID },
       })
     },
 
+    // 新しいルームをFirestoreに追加
     createNewRoom() {
       if (this.newRoom_input.length) {
         const quary = firebase.firestore().collection("rooms")
