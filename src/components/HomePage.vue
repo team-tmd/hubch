@@ -76,13 +76,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .room-lists {
-  width: 50%;
+  width: 90%;
   position: relative;
   /* display: inline-block; */
   display: flex;
   padding: 2em;
+  margin: 1em;
   background: #00ff95;
   border: 1px solid black;
   border-radius: 4px;
