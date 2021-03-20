@@ -1,12 +1,8 @@
 <template>
   <div>
-    <section
-      v-for="(message, index) in messages"
-      :key="message.id"
-      class="item"
-    >
-      <div v-if="nicknames[index]">
-        {{ nicknames[index] }}
+    <section v-for="message in messages" :key="message.id" class="item">
+      <div v-if="message.nickname">
+        {{ message.nickname }}
       </div>
 
       <!-- メッセージがテキストの場合 -> テキストを表示 -->
@@ -58,6 +54,10 @@ export default {
       this.currentUser = user ? user : {}
     })
 
+    this.scrollBottom()
+  },
+
+  mounted() {
     ///チャットの表示（onSnapshotoで変化を監視）
     const col_rooms = firebase
       .firestore()
@@ -67,18 +67,36 @@ export default {
       .orderBy("timestamp")
       .limit(30)
     col_rooms.onSnapshot((snapshot) => {
-      this.messages.length = 0
+      this.messages = []
       this.nicknames.length = 0
-      snapshot.docs.forEach((doc) => {
-        this.userIdToNickname(doc.data().userId)
-        this.messages.push({
-          id: doc.id,
-          ...doc.data(),
-        })
+      snapshot.docs.forEach((messageDoc) => {
+        // this.userIdToNickname(doc.data().userId)
+        firebase
+          .firestore()
+          .collection("myNicknames")
+          .doc(messageDoc.data().userId)
+          .get()
+          .then((doc) => {
+            if (doc.data().myNickname) {
+              // this.nicknames.push(doc.data().myNickname)
+              this.messages.push({
+                id: messageDoc.id,
+                nickname: doc.data().myNickname,
+                ...messageDoc.data(),
+              })
+              console.log(doc.data().myNickname)
+              console.log(this.messages)
+            } else {
+              // this.nicknames.push("")
+              this.messages.push({
+                id: messageDoc.id,
+                nickname: "",
+                ...messageDoc.data(),
+              })
+            }
+          })
       })
     })
-
-    this.scrollBottom()
   },
 
   methods: {
@@ -147,7 +165,7 @@ export default {
         .doc(userId)
         .get()
         .then((doc) => {
-          if (doc.data()) {
+          if (doc.data().myNickname) {
             this.nicknames.push(doc.data().myNickname)
           } else {
             this.nicknames.push("")
