@@ -17,45 +17,43 @@
 </template>
 
 <script>
-// firebase モジュール
 import firebase from "firebase"
-// import chatRoom from "chatRoom"
 
 export default {
   data() {
     return {
-      user: "",
       newRoom_input: "",
       rooms: [],
-      users: [],
     }
   },
 
   created() {
-    ///Roomリストの表示
-    const col_rooms = firebase
+    ///Roomリストの表示（onSnapshotで変化を監視）
+    firebase
       .firestore()
       .collection("rooms")
       .orderBy("timestamp")
       .limit(15)
-    col_rooms.get().then((snapshot) => {
-      snapshot.docs.forEach((doc) => {
-        this.rooms.push({
-          id: doc.id,
-          ...doc.data(),
+      .onSnapshot((snapshot) => {
+        this.rooms.length = 0
+        snapshot.docs.forEach((doc) => {
+          this.rooms.push({
+            id: doc.id,
+            ...doc.data(),
+          })
         })
       })
-    })
   },
   methods: {
+    // ChatRoom.vueへ"room.id"と"room.title"をルートで渡す
     toChatRoom(roomID) {
-      console.log(roomID)
       this.$router.push({
         name: "ChatRoom",
         params: { id: roomID },
       })
     },
 
+    // 新しいルームをFirestoreに追加
     createNewRoom() {
       if (this.newRoom_input.length) {
         const quary = firebase.firestore().collection("rooms")
@@ -69,12 +67,6 @@ export default {
           .catch(function(error) {
             console.error("Error writing new message to database", error)
           })
-          .then((ref) => {
-            this.rooms.push({
-              id: ref.id,
-              ...newRoom,
-            })
-          })
           .then(() => {
             this.newRoom_input = ""
           })
@@ -84,7 +76,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .room-lists {
   width: 50%;
   position: relative;
