@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ $route.params.id }}
     <section v-for="message in messages" :key="message.id" class="item">
       <!-- メッセージがテキストの場合 -> テキストを表示 -->
       <div v-if="message.text">
