@@ -76,7 +76,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .room-lists {
   width: 50%;
   position: relative;
