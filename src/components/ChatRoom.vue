@@ -120,18 +120,7 @@ export default {
 }
 </script>
 
-<style>
-.room-lists {
-  width: 50%;
-  position: relative;
-  /* display: inline-block; */
-  display: flex;
-  padding: 2em;
-  background: #00ff95;
-  border: 1px solid black;
-  border-radius: 4px;
-  line-height: 1.2em;
-}
+<style scoped>
 .item {
   position: relative;
   display: flex;
