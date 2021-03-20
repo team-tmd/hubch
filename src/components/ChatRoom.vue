@@ -2,16 +2,18 @@
   <div>
     {{ $route.params.id }}
     <section v-for="message in messages" :key="message.id" class="item">
-      <!-- <section v-for="(room) in messages" :key="message.id" class="item"> -->
+      <!-- メッセージがテキストの場合 -> テキストを表示 -->
       <div v-if="message.text">
         <div class="item-message">{{ message.text }}</div>
       </div>
+      <!-- メッセージが画像の場合 -> 画像を表示 -->
       <div v-if="message.imageURL">
         <img class="item-image" :src="message.imageURL" />
       </div>
     </section>
+
     <div class="form">
-      <!-- New Room作成部分 -->
+      <!-- テキストの入力タブ -->
       <form action="" @submit.prevent="sendMessage">
         <textarea
           v-model="inputMessage"
@@ -19,7 +21,7 @@
         ></textarea>
         <button type="submit">Send message</button>
       </form>
-
+      <!-- 画像の入力タブ -->
       <input type="file" ref="inputFile" accept="image/*" @change="sendImage" />
     </div>
   </div>
@@ -32,16 +34,13 @@ import firebase from "firebase"
 export default {
   data() {
     return {
-      user: "",
       inputMessage: "",
       messages: [],
-      users: [],
-      file: "",
     }
   },
 
   created() {
-    ///Roomリストの表示
+    ///チャットの表示（onSnapshotoで変化を監視）
     const col_rooms = firebase
       .firestore()
       .collection("rooms")
@@ -58,9 +57,19 @@ export default {
         })
       })
     })
+
+    this.scrollBottom()
   },
 
   methods: {
+    // スクロール位置を一番下に移動
+    scrollBottom() {
+      this.$nextTick(() => {
+        window.scrollTo(0, document.body.clientHeight)
+      })
+    },
+
+    //送信されたテキストをfiresoreに追加
     sendMessage() {
       if (this.inputMessage.length) {
         const quary = firebase
@@ -86,6 +95,7 @@ export default {
       }
     },
 
+    //送信された画像をStorageに追加
     sendImage() {
       const file = this.$refs.inputFile.files[0]
       const quary = firebase
@@ -107,47 +117,6 @@ export default {
         })
       )
     },
-
-    // sendImage(file) {
-    //   const quary = firebase
-    //     .firestore()
-    //     .collection("rooms")
-    //     .doc(this.$route.params.id)
-    //     .collection("messages")
-    //   quary
-    //     .add({
-    //       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-    //     })
-    //     .then(function(messageRef) {
-    //       const filePath =
-    //         firebase.auth().currentUser.uid +
-    //         "/" +
-    //         messageRef.id +
-    //         "/" +
-    //         file.name
-
-    //       return firebase
-    //         .storage()
-    //         .ref(filePath)
-    //         .put(file)
-    //         .then(function(fileSnapshot) {
-    //           //return fileSnapshote.ref.getDownloadURL().then((url) => {
-    //           fileSnapshot.ref.getDownloadURL().then((url) => {
-    //             //return messageRef.update({
-    //             messageRef.update({
-    //               imageURL: url,
-    //               storageUrl: fileSnapshot.metadata.fullPath,
-    //             })
-    //           })
-    //         })
-    //     })
-    //     .catch(function(error) {
-    //       console.error(
-    //         "There was an error uploading a file to Cloud Strage",
-    //         error
-    //       )
-    //     })
-    // },
   },
 }
 </script>
