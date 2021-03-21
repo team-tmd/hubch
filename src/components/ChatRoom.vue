@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page">
     <section v-for="message in messages" :key="message.id" class="item">
       <!-- ニックネームを設定している場合 -> nicknameを表示 -->
       <div v-if="message.nickname">
