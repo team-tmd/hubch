@@ -1,16 +1,29 @@
 <template>
   <div>
     <!-- New Room作成部分 -->
-    <form action="" @submit.prevent="createNewRoom">
-      <textarea
-        v-model="newRoom_input"
-        @keydown.enter.exact.prevent="createNewRoom"
-      ></textarea>
-      <button type="submit">Create New Room</button>
-    </form>
+    <button @click="doCreateNewRoom">create New Room</button>
+    <div v-if="orCreateNewRoom">
+      true
+      <input type="text" v-model="newRoomTitle" />
+      <input type="text" v-model="newRoomAbout" />
+      <button @click="createNewRoom">create</button>
+      <button @click="cancelCreateNewRoom">cancel</button>
+    </div>
+    <div v-else>false</div>
+
     <div>
-      <div v-for="room in rooms" :key="room.id">
-        <a @click="toChatRoom(room.id)" class="room-lists">{{ room.title }}</a>
+      <div class="roomlist" v-for="room in rooms" :key="room.id">
+        <a
+          v-if="room.about"
+          class="room room-title"
+          @click="toChatRoom(room.id)"
+        >
+          {{ room.title }}
+          {{ room.about }}
+        </a>
+        <a v-else class="room room-title" @click="toChatRoom(room.id)">
+          {{ room.title }}
+        </a>
       </div>
     </div>
   </div>
@@ -22,6 +35,10 @@ import firebase from "firebase"
 export default {
   data() {
     return {
+      orCreateNewRoom: false,
+      newRoomTitle: "",
+      newRoomAbout: "",
+
       newRoom_input: "",
       rooms: [],
     }
@@ -45,20 +62,30 @@ export default {
       })
   },
   methods: {
-    // ChatRoom.vueへ"room.id"と"room.title"をルートで渡す
+    // ChatRoom.vueへ"ID, Title, About"をルートで渡す
     toChatRoom(roomID) {
       this.$router.push({
         name: "ChatRoom",
-        params: { id: roomID },
+        params: { id: roomID, title: this.room.title, about: this.room.about },
       })
     },
-
-    // 新しいルームをFirestoreに追加
+    //ボタンを押したらRoom作成画面が表示される(ture:表示、false:非表示)
+    doCreateNewRoom() {
+      if (this.orCreateNewRoom == false) {
+        this.orCreateNewRoom = true
+      } else {
+        this.orCreateNewRoom = false
+        this.newRoomTitle = ""
+        this.newRoomAbout = ""
+      }
+    },
+    //FireStoreに新しいRoomの情報を送る
     createNewRoom() {
-      if (this.newRoom_input.length) {
+      if (this.newRoomTitle.length) {
         const quary = firebase.firestore().collection("rooms")
         const newRoom = {
-          title: this.newRoom_input,
+          title: this.newRoomTitle,
+          about: this.newRoomAbout,
           //owner:
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
@@ -68,28 +95,43 @@ export default {
             console.error("Error writing new message to database", error)
           })
           .then(() => {
-            this.newRoom_input = ""
+            this.newRoomTitle = ""
+            this.newRoomAbout = ""
+            this.orCreateNewRoom = false
           })
       }
+    },
+    cancelCreateNewRoom() {
+      this.orCreateNewRoom = false
+      this.newRoomTitle = ""
+      this.newRoomAbout = ""
     },
   },
 }
 </script>
 
 <style>
-.room-lists {
-  width: 50%;
-  position: relative;
-  /* display: inline-block; */
-  display: flex;
-  padding: 2em;
-  background: #00ff95;
-  border: 1px solid black;
-  border-radius: 4px;
-  line-height: 1.2em;
+.roomlist {
+  float: left;
+  margin-right: 1%;
+  margin-bottom: 1%;
+  width: 24%;
 }
-
-.room-lists:hover {
+.room {
+  /* float: left; */
+  display: flex;
+  width: 100%;
+  height: 100px;
+  /* margin: 0 1 0 0; */
+  /* position: relative; */
+  /* display: inline-block; */
+  /* padding: 2em; */
+  background: #00ff95;
+  border: 5px solid black;
+  border-radius: 25px;
+  /* line-height: 1.2em; */
+}
+.room:hover {
   background-color: #007c48;
 }
 </style>
