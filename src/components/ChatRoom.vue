@@ -1,6 +1,7 @@
 <template>
   <div>
     <section v-for="message in messages" :key="message.id" class="item">
+      <!-- ニックネームを設定している場合 -> nicknameを表示 -->
       <div v-if="message.nickname">
         {{ message.nickname }}
       </div>
@@ -40,6 +41,7 @@ export default {
       // 入力欄の文字
       inputMessage: "",
 
+      // id、text、timestamp、userId、nickname を Objectとして保存
       messages: [],
 
       // ログインしているユーザー(自分)の情報
@@ -62,9 +64,11 @@ export default {
       .orderBy("timestamp")
       .limit(30)
     col_rooms.onSnapshot((snapshot) => {
+      // messages の初期化
       this.messages = []
       snapshot.docs.forEach((messageDoc) => {
-        // this.userIdToNickname(doc.data().userId)
+        // messages の userId から そのユーザーが nickname を設定しているか調査
+        // .doc(messageDoc.data().userId)で判断している
         firebase
           .firestore()
           .collection("myNicknames")
@@ -72,6 +76,7 @@ export default {
           .get()
           .then((doc) => {
             if (doc.data()) {
+              // nickname を設定している場合 => messages に保存
               this.messages.push({
                 id: messageDoc.id,
                 nickname: doc.data().myNickname,
@@ -81,6 +86,7 @@ export default {
               // console.log(this.messages)
               // this.messages = this.sortedMessagesByTimestamp()
             } else {
+              // nickname を設定していない場合 => messages に""を保存
               this.messages.push({
                 id: messageDoc.id,
                 nickname: "",
@@ -91,14 +97,15 @@ export default {
           })
           .then(() => {
             this.messages = this.sortedMessagesByTimestamp()
+            console.log(this.messages)
+            this.scrollBottom()
           })
       })
     })
-
-    this.scrollBottom()
   },
 
   methods: {
+    // messages を timestamp 順に並び替える
     sortedMessagesByTimestamp() {
       return this.messages.sort((a, b) => {
         return a.timestamp < b.timestamp
