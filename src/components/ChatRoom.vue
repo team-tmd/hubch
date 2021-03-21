@@ -82,9 +82,6 @@ export default {
                 nickname: doc.data().myNickname,
                 ...messageDoc.data(),
               })
-              // console.log(doc.data().myNickname)
-              // console.log(this.messages)
-              // this.messages = this.sortedMessagesByTimestamp()
             } else {
               // nickname を設定していない場合 => messages に""を保存
               this.messages.push({
@@ -92,12 +89,11 @@ export default {
                 nickname: "",
                 ...messageDoc.data(),
               })
-              // this.messages = this.sortedMessagesByTimestamp()
             }
           })
           .then(() => {
             this.messages = this.sortedMessagesByTimestamp()
-            console.log(this.messages)
+            // console.log(this.messages)
             this.scrollBottom()
           })
       })
