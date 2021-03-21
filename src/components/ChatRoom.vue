@@ -1,6 +1,11 @@
 <template>
   <div>
     <section v-for="message in messages" :key="message.id" class="item">
+      <!-- ニックネームを設定している場合 -> nicknameを表示 -->
+      <div v-if="message.nickname">
+        {{ message.nickname }}
+      </div>
+
       <!-- メッセージがテキストの場合 -> テキストを表示 -->
       <div v-if="message.text">
         <div class="item-message">{{ message.text }}</div>
@@ -33,12 +38,23 @@ import firebase from "firebase"
 export default {
   data() {
     return {
+      // 入力欄の文字
       inputMessage: "",
+
+      // id、text、timestamp、userId、nickname を Objectとして保存
       messages: [],
+
+      // ログインしているユーザー(自分)の情報
+      currentUser: {},
     }
   },
 
   created() {
+    // ログイン状態を識別
+    firebase.auth().onAuthStateChanged((user) => {
+      this.currentUser = user ? user : {}
+    })
+
     ///チャットの表示（onSnapshotoで変化を監視）
     const col_rooms = firebase
       .firestore()
@@ -48,19 +64,54 @@ export default {
       .orderBy("timestamp")
       .limit(30)
     col_rooms.onSnapshot((snapshot) => {
-      this.messages.length = 0
-      snapshot.docs.forEach((doc) => {
-        this.messages.push({
-          id: doc.id,
-          ...doc.data(),
-        })
+      // messages の初期化
+      this.messages = []
+      snapshot.docs.forEach((messageDoc) => {
+        // messages の userId から そのユーザーが nickname を設定しているか調査
+        // .doc(messageDoc.data().userId)で判断している
+        firebase
+          .firestore()
+          .collection("myNicknames")
+          .doc(messageDoc.data().userId)
+          .get()
+          .then((doc) => {
+            if (doc.data()) {
+              // nickname を設定している場合 => messages に保存
+              this.messages.push({
+                id: messageDoc.id,
+                nickname: doc.data().myNickname,
+                ...messageDoc.data(),
+              })
+            } else {
+              // nickname を設定していない場合 => messages に""を保存
+              this.messages.push({
+                id: messageDoc.id,
+                nickname: "",
+                ...messageDoc.data(),
+              })
+            }
+          })
+          .then(() => {
+            this.messages = this.sortedMessagesByTimestamp()
+            // console.log(this.messages)
+            this.scrollBottom()
+          })
       })
     })
-
-    this.scrollBottom()
   },
 
   methods: {
+    // messages を timestamp 順に並び替える
+    sortedMessagesByTimestamp() {
+      return this.messages.sort((a, b) => {
+        return a.timestamp < b.timestamp
+          ? -1
+          : a.timestamp > b.timestamp
+          ? 1
+          : 0
+      })
+    },
+
     // スクロール位置を一番下に移動
     scrollBottom() {
       this.$nextTick(() => {
@@ -78,8 +129,8 @@ export default {
           .collection("messages")
 
         const newMessage = {
+          userId: this.currentUser.uid,
           text: this.inputMessage,
-          //owner:
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
@@ -110,6 +161,7 @@ export default {
       strageRef.put(file).then((fileSnapshote) =>
         fileSnapshote.ref.getDownloadURL().then(function(url) {
           quary.add({
+            userId: this.currentUser.uid,
             imageURL: url,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
           })
