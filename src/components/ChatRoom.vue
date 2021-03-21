@@ -54,10 +54,6 @@ export default {
       this.currentUser = user ? user : {}
     })
 
-    this.scrollBottom()
-  },
-
-  mounted() {
     ///チャットの表示（onSnapshotoで変化を監視）
     const col_rooms = firebase
       .firestore()
@@ -77,7 +73,7 @@ export default {
           .doc(messageDoc.data().userId)
           .get()
           .then((doc) => {
-            if (doc.data().myNickname) {
+            if (doc.data()) {
               // this.nicknames.push(doc.data().myNickname)
               this.messages.push({
                 id: messageDoc.id,
@@ -86,6 +82,7 @@ export default {
               })
               console.log(doc.data().myNickname)
               console.log(this.messages)
+              this.messages = this.sortedItemsByAmount()
             } else {
               // this.nicknames.push("")
               this.messages.push({
@@ -93,13 +90,30 @@ export default {
                 nickname: "",
                 ...messageDoc.data(),
               })
+              this.messages = this.sortedItemsByAmount()
             }
           })
       })
     })
+
+    this.scrollBottom()
+  },
+
+  mounted() {
+    // this.messages = this.sortedItemsByAmount()
   },
 
   methods: {
+    sortedItemsByAmount() {
+      return this.messages.sort((a, b) => {
+        return a.timestamp < b.timestamp
+          ? -1
+          : a.timestamp > b.timestamp
+          ? 1
+          : 0
+      })
+    },
+
     // スクロール位置を一番下に移動
     scrollBottom() {
       this.$nextTick(() => {
@@ -165,7 +179,7 @@ export default {
         .doc(userId)
         .get()
         .then((doc) => {
-          if (doc.data().myNickname) {
+          if (doc.data()) {
             this.nicknames.push(doc.data().myNickname)
           } else {
             this.nicknames.push("")
