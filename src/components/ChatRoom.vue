@@ -62,7 +62,7 @@ export default {
       .doc(this.$route.params.id)
       .collection("messages")
       .orderBy("timestamp")
-      .limit(30)
+
     col_rooms.onSnapshot((snapshot) => {
       // messages の初期化
       this.messages = []

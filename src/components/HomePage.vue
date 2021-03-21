@@ -119,7 +119,6 @@ export default {
       .firestore()
       .collection("rooms")
       .orderBy("timestamp")
-      .limit(15)
       .onSnapshot((snapshot) => {
         this.rooms.length = 0
         snapshot.docs.forEach((doc) => {
