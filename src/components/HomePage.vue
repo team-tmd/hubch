@@ -1,27 +1,93 @@
 <template>
   <div>
-    <!-- New Room作成部分 -->
+    <!-- Room作成ボタン -->
+    <button @click="doSearchRoom">Search Room</button>
+    <!-- Room検索ボタン -->
     <button @click="doCreateNewRoom">create New Room</button>
-    <div v-if="orCreateNewRoom">
-      true
-      <input type="text" v-model="newRoomTitle" />
-      <input type="text" v-model="newRoomAbout" />
-      <button @click="createNewRoom">create</button>
-      <button @click="cancelCreateNewRoom">cancel</button>
-    </div>
-    <div v-else>false</div>
 
-    <div>
+    <!-- Roomリスト検索部分 -->
+    <div v-if="orSearchRoom">
+      <div class="searchRoomFace">
+        <p>
+          Keyword <br />
+          <select name="keyward" v-model="keyward">
+            <option value="" selected>選択してください</option>
+            <option value="スガノミクス">スガノミクス</option>
+            <option value="アベノミクス">アベノミクス</option>
+          </select>
+        </p>
+        <p>
+          <button @click="searchRoom">search</button>
+          <button @click="cancelSearchRoom">cancel</button>
+        </p>
+      </div>
+      <!-- <div>
+        <div class="roomlist" v-for="room in rooms" :key="room.id">
+          <a
+            v-if="room.about"
+            class="room room-title"
+            @click="toChatRoom(room.id, room.title)"
+          >
+            {{ room.title }}
+            {{ room.about }}
+            {{ room.keyward }}
+          </a>
+          <a
+            v-else
+            class="room room-title"
+            @click="toChatRoom(room.id, room.title)"
+          >
+            {{ room.title }}
+          </a>
+        </div>
+      </div> -->
+    </div>
+    <div v-else></div>
+
+    <!-- Room作成部分 -->
+    <div v-if="orCreateNewRoom">
+      <div class="createRoomFace">
+        <div>Create New Room</div>
+        <p>
+          Title <br />
+          <input type="text" v-model="newRoomTitle" />
+        </p>
+        <p>
+          About <br />
+          <textarea v-model="newRoomAbout" cols="30" rows="10"></textarea>
+        </p>
+        <p>
+          Keyword <br />
+          <select name="keyward" v-model="keyward">
+            <option value="" selected>選択してください</option>
+            <option value="スガノミクス">スガノミクス</option>
+            <option value="アベノミクス">アベノミクス</option>
+          </select>
+        </p>
+        <p>
+          <button @click="createNewRoom">create</button>
+          <button @click="cancelCreateNewRoom">cancel</button>
+        </p>
+      </div>
+    </div>
+
+    <!-- Roomリスト表示部分 -->
+    <div v-if="!orSearchRoom">
       <div class="roomlist" v-for="room in rooms" :key="room.id">
         <a
           v-if="room.about"
           class="room room-title"
-          @click="toChatRoom(room.id)"
+          @click="toChatRoom(room.id, room.title)"
         >
           {{ room.title }}
           {{ room.about }}
+          {{ room.keyward }}
         </a>
-        <a v-else class="room room-title" @click="toChatRoom(room.id)">
+        <a
+          v-else
+          class="room room-title"
+          @click="toChatRoom(room.id, room.title)"
+        >
           {{ room.title }}
         </a>
       </div>
@@ -35,9 +101,12 @@ import firebase from "firebase"
 export default {
   data() {
     return {
+      // orSearchRoom: true,
+      orSearchRoom: false,
       orCreateNewRoom: false,
       newRoomTitle: "",
       newRoomAbout: "",
+      keyward: "",
 
       newRoom_input: "",
       rooms: [],
@@ -63,12 +132,44 @@ export default {
   },
   methods: {
     // ChatRoom.vueへ"ID, Title, About"をルートで渡す
-    toChatRoom(roomID) {
+    toChatRoom(roomID, roomTitle) {
       this.$router.push({
         name: "ChatRoom",
-        params: { id: roomID, title: this.room.title, about: this.room.about },
+        // params: { id: roomID, title: this.room.title, about: this.room.about },
+        params: { id: roomID, title: roomTitle },
       })
     },
+
+    //ボタンを押したらRoom検索画面が表示される(ture:表示、false:非表示)
+    doSearchRoom() {
+      if (this.orSearchRoom == false) {
+        this.orSearchRoom = true
+      } else {
+        this.orSearchRoom = false
+      }
+    },
+    //Room検索結果の表示（実装予定）
+    searchRoom() {
+      // firebase
+      //   .firestore()
+      //   .collection("rooms")
+      //   .orderBy("timestamp")
+      //   .limit(15)
+      //   .onSnapshot((snapshot) => {
+      //     this.rooms.length = 0
+      //     snapshot.docs.forEach((doc) => {
+      //       this.rooms.push({
+      //         id: doc.id,
+      //         ...doc.data(),
+      //       })
+      //     })
+      //   })
+    },
+    //検索を中止
+    cancelSearchRoom() {
+      this.orSearchRoom = false
+    },
+
     //ボタンを押したらRoom作成画面が表示される(ture:表示、false:非表示)
     doCreateNewRoom() {
       if (this.orCreateNewRoom == false) {
@@ -79,13 +180,15 @@ export default {
         this.newRoomAbout = ""
       }
     },
-    //FireStoreに新しいRoomの情報を送る
+    //FireStoreに新しく作成したRoomの情報を送る
     createNewRoom() {
       if (this.newRoomTitle.length) {
         const quary = firebase.firestore().collection("rooms")
+        const valuetKeyward = this.keyward
         const newRoom = {
           title: this.newRoomTitle,
           about: this.newRoomAbout,
+          keyward: valuetKeyward,
           //owner:
           timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         }
@@ -101,6 +204,7 @@ export default {
           })
       }
     },
+    //Room作成の中止
     cancelCreateNewRoom() {
       this.orCreateNewRoom = false
       this.newRoomTitle = ""
@@ -111,6 +215,19 @@ export default {
 </script>
 
 <style>
+.searchRoomFace {
+  width: 50%;
+  background-color: blue;
+}
+.createRoomFace {
+  width: 50%;
+  background-color: orange;
+}
+.fice-about {
+  width: 75%;
+  /* line-height: 1.2 * 3 em; */
+  height: 100px;
+}
 .roomlist {
   float: left;
   margin-right: 1%;
@@ -126,12 +243,14 @@ export default {
   /* position: relative; */
   /* display: inline-block; */
   /* padding: 2em; */
-  background: #00ff95;
-  border: 5px solid black;
+  /* background: #00ff95; */
+  background-color: #ffffff;
+  border: 3px solid black;
   border-radius: 25px;
   /* line-height: 1.2em; */
 }
 .room:hover {
-  background-color: #007c48;
+  /* background-color: #007c48; */
+  background-color: #a8a8a8;
 }
 </style>
