@@ -7,7 +7,7 @@
 
     <!-- Roomリスト検索部分 -->
     <div v-if="orSearchRoom">
-      <div class="searchRoomFace">
+      <div class="search-room-face">
         <p>
           Keyword <br />
           <select name="keyward" v-model="keyward">
@@ -22,7 +22,7 @@
         </p>
       </div>
       <!-- <div>
-        <div class="roomlist" v-for="room in rooms" :key="room.id">
+        <div class="room-list" v-for="room in rooms" :key="room.id">
           <a
             v-if="room.about"
             class="room room-title"
@@ -46,7 +46,7 @@
 
     <!-- Room作成部分 -->
     <div v-if="orCreateNewRoom">
-      <div class="createRoomFace">
+      <div class="create-room-face">
         <div>Create New Room</div>
         <p>
           Title <br />
@@ -73,7 +73,7 @@
 
     <!-- Roomリスト表示部分 -->
     <div v-if="!orSearchRoom">
-      <div class="roomlist" v-for="room in rooms" :key="room.id">
+      <div class="room-list" v-for="room in rooms" :key="room.id">
         <a
           v-if="room.about"
           class="room room-title"
@@ -214,12 +214,12 @@ export default {
 }
 </script>
 
-<style>
-.searchRoomFace {
+<style scoped>
+.search-room-face {
   width: 50%;
   background-color: blue;
 }
-.createRoomFace {
+.create-room-face {
   width: 50%;
   background-color: orange;
 }
@@ -228,7 +228,7 @@ export default {
   /* line-height: 1.2 * 3 em; */
   height: 100px;
 }
-.roomlist {
+.room-list {
   float: left;
   margin-right: 1%;
   margin-bottom: 1%;
