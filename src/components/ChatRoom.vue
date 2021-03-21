@@ -41,7 +41,6 @@ export default {
       inputMessage: "",
 
       messages: [],
-      nicknames: [],
 
       // ログインしているユーザー(自分)の情報
       currentUser: {},
@@ -64,7 +63,6 @@ export default {
       .limit(30)
     col_rooms.onSnapshot((snapshot) => {
       this.messages = []
-      this.nicknames.length = 0
       snapshot.docs.forEach((messageDoc) => {
         // this.userIdToNickname(doc.data().userId)
         firebase
@@ -74,24 +72,25 @@ export default {
           .get()
           .then((doc) => {
             if (doc.data()) {
-              // this.nicknames.push(doc.data().myNickname)
               this.messages.push({
                 id: messageDoc.id,
                 nickname: doc.data().myNickname,
                 ...messageDoc.data(),
               })
-              console.log(doc.data().myNickname)
-              console.log(this.messages)
-              this.messages = this.sortedItemsByAmount()
+              // console.log(doc.data().myNickname)
+              // console.log(this.messages)
+              // this.messages = this.sortedMessagesByTimestamp()
             } else {
-              // this.nicknames.push("")
               this.messages.push({
                 id: messageDoc.id,
                 nickname: "",
                 ...messageDoc.data(),
               })
-              this.messages = this.sortedItemsByAmount()
+              // this.messages = this.sortedMessagesByTimestamp()
             }
+          })
+          .then(() => {
+            this.messages = this.sortedMessagesByTimestamp()
           })
       })
     })
@@ -99,12 +98,8 @@ export default {
     this.scrollBottom()
   },
 
-  mounted() {
-    // this.messages = this.sortedItemsByAmount()
-  },
-
   methods: {
-    sortedItemsByAmount() {
+    sortedMessagesByTimestamp() {
       return this.messages.sort((a, b) => {
         return a.timestamp < b.timestamp
           ? -1
@@ -169,22 +164,6 @@ export default {
           })
         })
       )
-    },
-
-    // userIdからニックネームを取得
-    userIdToNickname(userId) {
-      firebase
-        .firestore()
-        .collection("myNicknames")
-        .doc(userId)
-        .get()
-        .then((doc) => {
-          if (doc.data()) {
-            this.nicknames.push(doc.data().myNickname)
-          } else {
-            this.nicknames.push("")
-          }
-        })
     },
   },
 }
