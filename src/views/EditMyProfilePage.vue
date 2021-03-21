@@ -1,5 +1,5 @@
 <template>
-  <div class="edit-my-profile">
+  <div class="edit-my-profile page">
     <h1>This is my page</h1>
     <h2>ログインしているユーザー情報</h2>
     <img :src="user.photoURL" class="rounded" />

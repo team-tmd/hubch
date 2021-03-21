@@ -43,6 +43,12 @@ export default {
 
 <style scoped>
 .nav__bar {
+  /* 常時navbarを表示 */
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 500;
+
   height: 50px;
   display: flex;
   justify-content: space-between;

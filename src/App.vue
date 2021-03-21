@@ -29,4 +29,8 @@ export default {
 body {
   margin: 0;
 }
+.page {
+  /* 常時navbarを表示するため */
+  z-index: 0;
+}
 </style>

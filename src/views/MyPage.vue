@@ -1,5 +1,5 @@
 <template>
-  <div class="my-page">
+  <div class="my-page page">
     <MyProfile v-if="isSignIn" />
     <SignIn v-else />
   </div>
