@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <!-- Room「作成」ボタン -->
-    <button @click="doSearchRoom">Search Room</button>
+  <div class="main-field">
     <!-- Room「検索」ボタン -->
+    <button @click="doSearchRoom">Search Room</button>
+    <!-- Room「作成」ボタン -->
     <button @click="doCreateNewRoom">create New Room</button>
 
     <!-- Roomリスト検索部分 -->
@@ -11,7 +11,7 @@
         <p>
           Keyword <br />
           <select name="keyward" v-model="keyward">
-            <option value="" selected>選択してください</option>
+            <option value="" selected>指定なし</option>
             <option value="スガノミクス">スガノミクス</option>
             <option value="アベノミクス">アベノミクス</option>
           </select>
@@ -24,21 +24,14 @@
       <!-- 検索結果の表示部分 -->
       <div>
         <div class="room-list" v-for="room in rooms" :key="room.id">
-          <a
-            v-if="room.about"
-            class="room room-title"
-            @click="toChatRoom(room.id, room.title)"
-          >
+          <a class="room room-title" @click="toChatRoom(room.id, room.title)">
             {{ room.title }}
-            {{ room.about }}
-            {{ room.keyward }}
           </a>
-          <a
-            v-else
-            class="room room-title"
-            @click="toChatRoom(room.id, room.title)"
-          >
-            {{ room.title }}
+          <a class="room-reference">
+            about <br />
+            {{ room.about }} <br />
+            keward <br />
+            {{ room.keyward }} <br />
           </a>
         </div>
       </div>
@@ -82,8 +75,6 @@
         > -->
         <a class="room room-title" @click="toChatRoom(room.id, room.title)">
           {{ room.title }}
-          <!-- {{ room.about }}
-          {{ room.keyward }} -->
         </a>
         <a class="room-reference">
           about <br />
@@ -91,13 +82,6 @@
           keward <br />
           {{ room.keyward }} <br />
         </a>
-        <!-- <a
-          v-else
-          class="room room-title"
-          @click="toChatRoom(room.id, room.title)"
-        >
-          {{ room.title }}
-        </a> -->
       </div>
     </div>
   </div>
@@ -244,13 +228,23 @@ export default {
 </script>
 
 <style scoped>
+.main-field {
+  width: 100%;
+  height: 2000px;
+  background-color: rgb(50, 50, 50);
+}
 .search-room-face {
   width: 50%;
   background-color: blue;
 }
 .create-room-face {
   width: 50%;
-  background-color: orange;
+  border-radius: 50px;
+  filter: brightness(120%);
+  background-color: hsl(32, 100%, 50%);
+  /* box-shadow: inset 2px -5px 40px 30px hsl(34, 98%, 34%); */
+  /* box-shadow: 0px 10px 25px 1px hsl(34, 98%, 34%); */
+  box-shadow: 0px 10px 25px 10px hsl(0, 0%, 0%);
 }
 .fice-about {
   width: 75%;
