@@ -153,6 +153,7 @@ export default {
       } else {
         this.orSearchRoom = false
       }
+      this.orCreateNewRoom = false
     },
     //Room検索結果の表示（キーワード検索）
     searchRoom() {
@@ -204,6 +205,7 @@ export default {
         this.newRoomTitle = ""
         this.newRoomAbout = ""
       }
+      this.orSearchRoom = false
     },
     //FireStoreに新しく作成したRoomの情報を送る
     createNewRoom() {
