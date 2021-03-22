@@ -75,22 +75,29 @@
     <!-- Roomリスト表示部分 -->
     <div v-if="!orSearchRoom">
       <div class="room-list" v-for="room in rooms" :key="room.id">
-        <a
+        <!-- <a
           v-if="room.about"
           class="room room-title"
           @click="toChatRoom(room.id, room.title)"
-        >
+        > -->
+        <a class="room room-title" @click="toChatRoom(room.id, room.title)">
           {{ room.title }}
-          {{ room.about }}
-          {{ room.keyward }}
+          <!-- {{ room.about }}
+          {{ room.keyward }} -->
         </a>
-        <a
+        <a class="room-reference">
+          about <br />
+          {{ room.about }} <br />
+          keward <br />
+          {{ room.keyward }} <br />
+        </a>
+        <!-- <a
           v-else
           class="room room-title"
           @click="toChatRoom(room.id, room.title)"
         >
           {{ room.title }}
-        </a>
+        </a> -->
       </div>
     </div>
   </div>
@@ -270,7 +277,12 @@ export default {
   /* line-height: 1.2em; */
 }
 .room:hover {
-  /* background-color: #007c48; */
   background-color: #a8a8a8;
+}
+.room-reference {
+  display: none;
+}
+.room:hover + .room-reference {
+  display: block;
 }
 </style>
