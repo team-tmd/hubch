@@ -21,7 +21,7 @@
           <button @click="cancelSearchRoom">cancel</button>
         </p>
       </div>
-      <!-- <div>
+      <div>
         <div class="room-list" v-for="room in rooms" :key="room.id">
           <a
             v-if="room.about"
@@ -40,7 +40,7 @@
             {{ room.title }}
           </a>
         </div>
-      </div> -->
+      </div>
     </div>
     <div v-else></div>
 
@@ -101,7 +101,6 @@ import firebase from "firebase"
 export default {
   data() {
     return {
-      // orSearchRoom: true,
       orSearchRoom: false,
       orCreateNewRoom: false,
       newRoomTitle: "",
@@ -147,26 +146,41 @@ export default {
         this.orSearchRoom = false
       }
     },
-    //Room検索結果の表示（実装予定）
+    //Room検索結果の表示（キーワード検索）
     searchRoom() {
-      // firebase
-      //   .firestore()
-      //   .collection("rooms")
-      //   .orderBy("timestamp")
-      //   .limit(15)
-      //   .onSnapshot((snapshot) => {
-      //     this.rooms.length = 0
-      //     snapshot.docs.forEach((doc) => {
-      //       this.rooms.push({
-      //         id: doc.id,
-      //         ...doc.data(),
-      //       })
-      //     })
-      //   })
+      const quary = firebase.firestore().collection("rooms")
+      const valuetKeyward = this.keyward
+      this.rooms.length = 0
+      if (this.keyward != "") {
+        quary
+          .where("keyward", "==", valuetKeyward)
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              this.rooms.push({
+                id: doc.id,
+                ...doc.data(),
+              })
+            })
+          })
+      } else {
+        quary
+          .orderBy("timestamp")
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              this.rooms.push({
+                id: doc.id,
+                ...doc.data(),
+              })
+            })
+          })
+      }
     },
     //検索を中止
     cancelSearchRoom() {
       this.orSearchRoom = false
+      this.keyward = ""
     },
 
     //ボタンを押したらRoom作成画面が表示される(ture:表示、false:非表示)
@@ -199,15 +213,17 @@ export default {
           .then(() => {
             this.newRoomTitle = ""
             this.newRoomAbout = ""
+            this.keyward = ""
             this.orCreateNewRoom = false
           })
       }
     },
     //Room作成の中止
     cancelCreateNewRoom() {
-      this.orCreateNewRoom = false
       this.newRoomTitle = ""
       this.newRoomAbout = ""
+      this.keyward = ""
+      this.orCreateNewRoom = false
     },
   },
 }
