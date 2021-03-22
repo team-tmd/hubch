@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- Room作成ボタン -->
+    <!-- Room「作成」ボタン -->
     <button @click="doSearchRoom">Search Room</button>
-    <!-- Room検索ボタン -->
+    <!-- Room「検索」ボタン -->
     <button @click="doCreateNewRoom">create New Room</button>
 
     <!-- Roomリスト検索部分 -->
@@ -21,7 +21,8 @@
           <button @click="cancelSearchRoom">cancel</button>
         </p>
       </div>
-      <!-- <div>
+      <!-- 検索結果の表示部分 -->
+      <div>
         <div class="room-list" v-for="room in rooms" :key="room.id">
           <a
             v-if="room.about"
@@ -40,7 +41,7 @@
             {{ room.title }}
           </a>
         </div>
-      </div> -->
+      </div>
     </div>
     <div v-else></div>
 
@@ -74,22 +75,29 @@
     <!-- Roomリスト表示部分 -->
     <div v-if="!orSearchRoom">
       <div class="room-list" v-for="room in rooms" :key="room.id">
-        <a
+        <!-- <a
           v-if="room.about"
           class="room room-title"
           @click="toChatRoom(room.id, room.title)"
-        >
+        > -->
+        <a class="room room-title" @click="toChatRoom(room.id, room.title)">
           {{ room.title }}
-          {{ room.about }}
-          {{ room.keyward }}
+          <!-- {{ room.about }}
+          {{ room.keyward }} -->
         </a>
-        <a
+        <a class="room-reference">
+          about <br />
+          {{ room.about }} <br />
+          keward <br />
+          {{ room.keyward }} <br />
+        </a>
+        <!-- <a
           v-else
           class="room room-title"
           @click="toChatRoom(room.id, room.title)"
         >
           {{ room.title }}
-        </a>
+        </a> -->
       </div>
     </div>
   </div>
@@ -101,7 +109,6 @@ import firebase from "firebase"
 export default {
   data() {
     return {
-      // orSearchRoom: true,
       orSearchRoom: false,
       orCreateNewRoom: false,
       newRoomTitle: "",
@@ -147,26 +154,45 @@ export default {
         this.orSearchRoom = false
       }
     },
-    //Room検索結果の表示（実装予定）
+    //Room検索結果の表示（キーワード検索）
     searchRoom() {
-      // firebase
-      //   .firestore()
-      //   .collection("rooms")
-      //   .orderBy("timestamp")
-      //   .limit(15)
-      //   .onSnapshot((snapshot) => {
-      //     this.rooms.length = 0
-      //     snapshot.docs.forEach((doc) => {
-      //       this.rooms.push({
-      //         id: doc.id,
-      //         ...doc.data(),
-      //       })
-      //     })
-      //   })
+      const quary = firebase.firestore().collection("rooms")
+      const valuetKeyward = this.keyward
+      this.rooms.length = 0
+
+      // 「選択してください」で検索を実行するとタイムスタンプ順で「全て」表示
+      if (this.keyward != "") {
+        quary
+          .where("keyward", "==", valuetKeyward)
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              this.rooms.push({
+                id: doc.id,
+                ...doc.data(),
+              })
+            })
+          })
+      }
+      // 「キーワード指定」で検索した時の処理
+      else {
+        quary
+          .orderBy("timestamp")
+          .get()
+          .then((snapshot) => {
+            snapshot.forEach((doc) => {
+              this.rooms.push({
+                id: doc.id,
+                ...doc.data(),
+              })
+            })
+          })
+      }
     },
     //検索を中止
     cancelSearchRoom() {
       this.orSearchRoom = false
+      this.keyward = ""
     },
 
     //ボタンを押したらRoom作成画面が表示される(ture:表示、false:非表示)
@@ -199,15 +225,17 @@ export default {
           .then(() => {
             this.newRoomTitle = ""
             this.newRoomAbout = ""
+            this.keyward = ""
             this.orCreateNewRoom = false
           })
       }
     },
     //Room作成の中止
     cancelCreateNewRoom() {
-      this.orCreateNewRoom = false
       this.newRoomTitle = ""
       this.newRoomAbout = ""
+      this.keyward = ""
+      this.orCreateNewRoom = false
     },
   },
 }
@@ -249,7 +277,12 @@ export default {
   /* line-height: 1.2em; */
 }
 .room:hover {
-  /* background-color: #007c48; */
   background-color: #a8a8a8;
+}
+.room-reference {
+  display: none;
+}
+.room:hover + .room-reference {
+  display: block;
 }
 </style>
