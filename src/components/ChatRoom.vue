@@ -173,9 +173,6 @@ export default {
 </script>
 
 <style scoped>
-.page {
-  background-color: black;
-}
 .item {
   position: relative;
   display: flex;
