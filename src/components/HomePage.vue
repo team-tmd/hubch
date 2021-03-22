@@ -1,8 +1,8 @@
 <template>
   <div>
-    <!-- Room作成ボタン -->
+    <!-- Room「作成」ボタン -->
     <button @click="doSearchRoom">Search Room</button>
-    <!-- Room検索ボタン -->
+    <!-- Room「検索」ボタン -->
     <button @click="doCreateNewRoom">create New Room</button>
 
     <!-- Roomリスト検索部分 -->
@@ -21,6 +21,7 @@
           <button @click="cancelSearchRoom">cancel</button>
         </p>
       </div>
+      <!-- 検索結果の表示部分 -->
       <div>
         <div class="room-list" v-for="room in rooms" :key="room.id">
           <a
@@ -151,6 +152,8 @@ export default {
       const quary = firebase.firestore().collection("rooms")
       const valuetKeyward = this.keyward
       this.rooms.length = 0
+
+      // 「選択してください」で検索を実行するとタイムスタンプ順で「全て」表示
       if (this.keyward != "") {
         quary
           .where("keyward", "==", valuetKeyward)
@@ -163,7 +166,9 @@ export default {
               })
             })
           })
-      } else {
+      }
+      // 「キーワード指定」で検索した時の処理
+      else {
         quary
           .orderBy("timestamp")
           .get()
