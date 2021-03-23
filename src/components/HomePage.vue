@@ -258,27 +258,84 @@ export default {
   width: 24%;
 }
 .room {
-  /* float: left; */
-  display: flex;
   width: 100%;
   height: 100px;
-  /* margin: 0 1 0 0; */
-  /* position: relative; */
-  /* display: inline-block; */
-  /* padding: 2em; */
-  /* background: #00ff95; */
-  background-color: #ffffff;
-  border: 3px solid black;
-  border-radius: 25px;
-  /* line-height: 1.2em; */
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border-radius: 4px;
+  color: #ffffff;
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+  border-bottom: solid 3px #c58668;
+}
+.room:active {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+  border-bottom: none;
 }
 .room:hover {
-  background-color: #a8a8a8;
+  font-weight: bold;
 }
+
+/* .room-reference { */
+/* position: absolute; */
+/* display: none; */
+/* background: #ffffff; */
+/* border: 1px solid #020203; */
+/* border-radius: 0.4em; */
+/* } */
+
+/* .room-reference:after { */
+/* content: ""; */
+/* position: absolute; */
+/* top: 0; */
+/* left: 50%; */
+/* width: 0; */
+/* height: 0; */
+/* border: 0.625em solid transparent; */
+/* border: 1px solid #020203; */
+/* border-bottom-color: #ffffff; */
+/* border-top: 0; */
+/* border-left: 0; */
+/* margin-left: -0.312em; */
+/* margin-top: -0.625em; */
+/* } */
+
 .room-reference {
   display: none;
+  position: relative;
+  background: #ff9408;
+  border: 2px solid #a16b00;
 }
+.room-reference:after,
+.room-reference:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+
+.room-reference:after {
+  border-color: rgba(255, 148, 8, 0);
+  border-bottom-color: #ff9408;
+  border-width: 30px;
+  margin-left: -30px;
+}
+.room-reference:before {
+  border-color: rgba(161, 107, 0, 0);
+  border-bottom-color: #a16b00;
+  border-width: 33px;
+  margin-left: -33px;
+}
+
 .room:hover + .room-reference {
+  position: absolute;
   display: block;
 }
 </style>

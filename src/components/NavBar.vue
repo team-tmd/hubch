@@ -54,7 +54,7 @@ export default {
   justify-content: space-between;
   align-items: stretch;
   background-color: black;
-  border-radius: 10px;
+  /* border-radius: 10px; */
 }
 .nav__link {
   display: flex;
@@ -89,12 +89,13 @@ export default {
   opacity: 60%;
 }
 .rounded:hover {
+  font-weight: bold;
   border-radius: 50px;
   height: 50px;
   width: 50px;
   /* border: white; */
   opacity: 100%;
-  border: 1px solid white;
+  border: 1px solid rgb(0, 0, 0);
 }
 .nav__my-page {
   display: flex;
