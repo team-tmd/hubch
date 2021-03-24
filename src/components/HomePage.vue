@@ -25,25 +25,11 @@
           </p>
         </div>
       </div>
-      <!-- 検索結果の表示部分 -->
-      <div>
-        <div class="room-list" v-for="room in rooms" :key="room.id">
-          <a class="room room-title" @click="toChatRoom(room.id, room.title)">
-            {{ room.title }}
-          </a>
-          <a class="room-reference">
-            about <br />
-            {{ room.about }} <br />
-            keward <br />
-            {{ room.keyward }} <br />
-          </a>
-        </div>
-      </div>
     </div>
     <div v-else></div>
 
     <!-- Room作成部分 -->
-    <div v-if="orCreateNewRoom" style="z-index:10000">
+    <div v-if="orCreateNewRoom">
       <div class="create-room-face">
         <div class="option-title">Create New Room</div>
         <div class="option-content">
@@ -78,24 +64,24 @@
     </div>
 
     <!-- Roomリスト表示部分 -->
-    <div v-if="!orSearchRoom">
-      <div class="room-list" v-for="room in rooms" :key="room.id">
-        <!-- <a
-          v-if="room.about"
-          class="room room-title"
-          @click="toChatRoom(room.id, room.title)"
-        > -->
-        <a class="room room-title" @click="toChatRoom(room.id, room.title)">
-          {{ room.title }}
-        </a>
-        <a class="room-reference">
-          about <br />
-          {{ room.about }} <br />
-          keward <br />
-          {{ room.keyward }} <br />
-        </a>
-      </div>
+    <!-- <div v-if="rooms"> -->
+    <div class="room-list" v-for="room in rooms" :key="room.id">
+      <a class="room room-title" @click="toChatRoom(room.id, room.title)">
+        {{ room.title }}
+        <div class="delete-button" @click="deleteRoom">X</div>
+      </a>
+      <a class="room-reference">
+        owner <br />
+        {{ room.owner }} <br />
+        about <br />
+        {{ room.about }} <br />
+        keward <br />
+        {{ room.keyward }} <br />
+      </a>
     </div>
+    <!-- </div> -->
+    <!-- <div v-else>該当するルームは見つかりませんでした</div> -->
+
     <footer>
       <!-- Room「検索」ボタン -->
       <button class="search footer-button" @click="doSearchRoom">
@@ -115,6 +101,9 @@ import firebase from "firebase"
 export default {
   data() {
     return {
+      // ログインしているユーザー(自分)の情報
+      currentUser: {},
+
       orSearchRoom: false,
       orCreateNewRoom: false,
       newRoomTitle: "",
@@ -127,6 +116,11 @@ export default {
   },
 
   created() {
+    // ログイン状態を識別
+    firebase.auth().onAuthStateChanged((user) => {
+      this.currentUser = user ? user : {}
+    })
+
     ///Roomリストの表示（onSnapshotで変化を監視）
     firebase
       .firestore()
@@ -167,7 +161,7 @@ export default {
       const valuetKeyward = this.keyward
       this.rooms.length = 0
 
-      // 「選択してください」で検索を実行するとタイムスタンプ順で「全て」表示
+      // 「キーワード指定」で検索した時の処理
       if (this.keyward != "") {
         quary
           .where("keyward", "==", valuetKeyward)
@@ -181,7 +175,7 @@ export default {
             })
           })
       }
-      // 「キーワード指定」で検索した時の処理
+      // 「指定なし」で検索を実行するとタイムスタンプ順で「全て」表示
       else {
         quary
           .orderBy("timestamp")
@@ -218,24 +212,41 @@ export default {
       if (this.newRoomTitle.length) {
         const quary = firebase.firestore().collection("rooms")
         const valuetKeyward = this.keyward
-        const newRoom = {
-          title: this.newRoomTitle,
-          about: this.newRoomAbout,
-          keyward: valuetKeyward,
-          //owner:
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        }
-        quary
-          .add(newRoom)
-          .catch(function(error) {
-            console.error("Error writing new message to database", error)
+        let userNickname = ""
+        // let userProfileFigure = ""
+
+        firebase
+          .firestore()
+          .collection("myNicknames")
+          .doc(this.currentUser.uid)
+          .get()
+          .then((userSnapshot) => {
+            userNickname = userSnapshot.data().myNickname
+            // userProfileFigure = userSnapshot.data().myNickname
           })
           .then(() => {
-            this.newRoomTitle = ""
-            this.newRoomAbout = ""
-            this.keyward = ""
-            this.orCreateNewRoom = false
+            quary
+              .add({
+                owner: userNickname,
+                ownerID: this.currentUser.uid,
+                title: this.newRoomTitle,
+                about: this.newRoomAbout,
+                keyward: valuetKeyward,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              })
+              .catch(function(error) {
+                console.error("Error writing new message to database", error)
+              })
+              .then(() => {
+                this.newRoomTitle = ""
+                this.newRoomAbout = ""
+                this.keyward = ""
+                this.orCreateNewRoom = false
+              })
           })
+        // .then(() => {
+        //   this.toChatRoom(this.room.id, this.room.title)
+        // })
       }
     },
     //Room作成の中止
@@ -245,6 +256,13 @@ export default {
       this.keyward = ""
       this.orCreateNewRoom = false
     },
+
+    //deleteRoom() {
+    //firebase.firestore().collection("rooms").delete
+    //.catch((error) => {
+    //   console.error("Error removing document: ", error)
+    // })
+    //},
   },
 }
 </script>
@@ -257,6 +275,7 @@ export default {
   box-sizing: border-box;
   background-color: rgb(50, 50, 50);
   /* ↑ヘッダーやフッターを含むすべての要素の高さ＝min-height:100vhになるように指定 */
+  background-image: linear-gradient(45deg, #000000 0%, #6e6e6e 100%);
 }
 .option-title {
   padding-top: 10px;
@@ -316,13 +335,12 @@ export default {
 }
 .fice-about {
   width: 75%;
-  /* line-height: 1.2 * 3 em; */
   height: 100px;
 }
 .room-list {
   float: left;
   margin-right: 1%;
-  margin-bottom: 1%;
+  margin-top: 1%;
   width: 24%;
 }
 .room {
@@ -330,9 +348,10 @@ export default {
   height: 100px;
   display: inline-block;
   padding: 0.5em 1em;
+  font-size: 20px;
   text-decoration: none;
   border-radius: 4px;
-  color: #ffffff;
+  color: rgb(0, 0, 0);
   background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
   border-bottom: solid 3px #c58668;
@@ -346,30 +365,6 @@ export default {
 .room:hover {
   font-weight: bold;
 }
-
-/* .room-reference { */
-/* position: absolute; */
-/* display: none; */
-/* background: #ffffff; */
-/* border: 1px solid #020203; */
-/* border-radius: 0.4em; */
-/* } */
-
-/* .room-reference:after { */
-/* content: ""; */
-/* position: absolute; */
-/* top: 0; */
-/* left: 50%; */
-/* width: 0; */
-/* height: 0; */
-/* border: 0.625em solid transparent; */
-/* border: 1px solid #020203; */
-/* border-bottom-color: #ffffff; */
-/* border-top: 0; */
-/* border-left: 0; */
-/* margin-left: -0.312em; */
-/* margin-top: -0.625em; */
-/* } */
 
 .room-reference {
   display: none;
@@ -415,6 +410,7 @@ export default {
 .footer-button {
   height: 50px;
   background: rgb(0, 0, 0);
+  border: 1px solid rgb(50, 50, 50);
   color: rgb(255, 255, 255);
 }
 .footer-button:hover {
