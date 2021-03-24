@@ -2,7 +2,7 @@
   <div class="main-field">
     <!-- Roomリスト検索部分 -->
     <div v-if="orSearchRoom">
-      <div class="search-room-face">
+      <div class="search-room-face" style="z-index:10000">
         <div class="option-title">Search Room</div>
         <div class="option-content">
           <p>
@@ -43,7 +43,7 @@
     <div v-else></div>
 
     <!-- Room作成部分 -->
-    <div v-if="orCreateNewRoom">
+    <div v-if="orCreateNewRoom" style="z-index:10000">
       <div class="create-room-face">
         <div class="option-title">Create New Room</div>
         <div class="option-content">
@@ -293,6 +293,7 @@ export default {
   left: 50%;
   width: 50%;
   transform: translate(-50%, -50%);
+  z-index: 10000;
   filter: brightness(120%);
   background-color: hsl(32, 100%, 50%);
   background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
@@ -306,6 +307,7 @@ export default {
   left: 50%;
   width: 50%;
   transform: translate(-50%, -50%);
+  z-index: 10000;
   filter: brightness(120%);
   background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
   border-bottom: solid 3px #c58668;
@@ -372,6 +374,7 @@ export default {
 .room-reference {
   display: none;
   position: relative;
+  width: 24%;
   background: #ff9408;
   border: 2px solid #a16b00;
 }
