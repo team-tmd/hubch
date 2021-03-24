@@ -1,25 +1,29 @@
 <template>
   <div class="main-field">
-    <!-- Room「検索」ボタン -->
-    <button @click="doSearchRoom">Search Room</button>
-    <!-- Room「作成」ボタン -->
-    <button @click="doCreateNewRoom">create New Room</button>
-
     <!-- Roomリスト検索部分 -->
     <div v-if="orSearchRoom">
-      <div class="search-room-face">
-        <p>
-          Keyword <br />
-          <select name="keyward" v-model="keyward">
-            <option value="" selected>指定なし</option>
-            <option value="スガノミクス">スガノミクス</option>
-            <option value="アベノミクス">アベノミクス</option>
-          </select>
-        </p>
-        <p>
-          <button @click="searchRoom">search</button>
-          <button @click="cancelSearchRoom">cancel</button>
-        </p>
+      <div class="search-room-face" style="z-index:10000">
+        <div class="option-title">Search Room</div>
+        <div class="option-content">
+          <p>
+            Keyword <br />
+            <select name="keyward" v-model="keyward">
+              <option value="" selected>指定なし</option>
+              <option value="スガノミクス">スガノミクス</option>
+              <option value="アベノミクス">アベノミクス</option>
+            </select>
+          </p>
+        </div>
+        <div class="option-button">
+          <p>
+            <button class="do-button" @click="searchRoom">
+              search
+            </button>
+            <button class="do-button" @click="cancelSearchRoom">
+              cancel
+            </button>
+          </p>
+        </div>
       </div>
       <!-- 検索結果の表示部分 -->
       <div>
@@ -39,29 +43,37 @@
     <div v-else></div>
 
     <!-- Room作成部分 -->
-    <div v-if="orCreateNewRoom">
+    <div v-if="orCreateNewRoom" style="z-index:10000">
       <div class="create-room-face">
-        <div>Create New Room</div>
-        <p>
-          Title <br />
-          <input type="text" v-model="newRoomTitle" />
-        </p>
-        <p>
-          About <br />
-          <textarea v-model="newRoomAbout" cols="30" rows="10"></textarea>
-        </p>
-        <p>
-          Keyword <br />
-          <select name="keyward" v-model="keyward">
-            <option value="" selected>選択してください</option>
-            <option value="スガノミクス">スガノミクス</option>
-            <option value="アベノミクス">アベノミクス</option>
-          </select>
-        </p>
-        <p>
-          <button @click="createNewRoom">create</button>
-          <button @click="cancelCreateNewRoom">cancel</button>
-        </p>
+        <div class="option-title">Create New Room</div>
+        <div class="option-content">
+          <p>
+            Title <br />
+            <input type="text" v-model="newRoomTitle" />
+          </p>
+          <p>
+            About <br />
+            <textarea v-model="newRoomAbout" cols="30" rows="10"></textarea>
+          </p>
+          <p>
+            Keyword <br />
+            <select name="keyward" v-model="keyward">
+              <option value="" selected>選択してください</option>
+              <option value="スガノミクス">スガノミクス</option>
+              <option value="アベノミクス">アベノミクス</option>
+            </select>
+          </p>
+        </div>
+        <div class="option-button">
+          <p>
+            <button class="do-button" @click="createNewRoom">
+              create
+            </button>
+            <button class="do-button" @click="cancelCreateNewRoom">
+              cancel
+            </button>
+          </p>
+        </div>
       </div>
     </div>
 
@@ -84,6 +96,16 @@
         </a>
       </div>
     </div>
+    <footer>
+      <!-- Room「検索」ボタン -->
+      <button class="search footer-button" @click="doSearchRoom">
+        Search Room
+      </button>
+      <!-- Room「作成」ボタン -->
+      <button class="create footer-button" @click="doCreateNewRoom">
+        create New Room
+      </button>
+    </footer>
   </div>
 </template>
 
@@ -229,22 +251,68 @@ export default {
 
 <style scoped>
 .main-field {
-  width: 100%;
-  height: 2000px;
+  min-height: 100vh; /* ←コンテンツの高さの最小値＝ブラウザの高さに指定 */
+  position: relative; /* ←相対位置 */
+  padding-bottom: 60px; /* ←フッターの高さを指定 */
+  box-sizing: border-box;
   background-color: rgb(50, 50, 50);
+  /* ↑ヘッダーやフッターを含むすべての要素の高さ＝min-height:100vhになるように指定 */
+}
+.option-title {
+  padding-top: 10px;
+  text-align: center;
+  font-weight: bold;
+}
+.option-content {
+  padding-left: 20px;
+}
+.option-button {
+  text-align: center;
+}
+.do-button {
+  width: 45%;
+  border-radius: 20px;
+  background-color: hsl(32, 100%, 50%);
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+}
+.do-button:hover {
+  font-weight: bold;
+}
+.do-button:active {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+  border-bottom: none;
+}
+.do-search:hover {
+  background-color: hsl(32, 100%, 19%);
 }
 .search-room-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
   width: 50%;
-  background-color: blue;
-}
-.create-room-face {
-  width: 50%;
-  border-radius: 50px;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
   filter: brightness(120%);
   background-color: hsl(32, 100%, 50%);
-  /* box-shadow: inset 2px -5px 40px 30px hsl(34, 98%, 34%); */
-  /* box-shadow: 0px 10px 25px 1px hsl(34, 98%, 34%); */
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+  border-bottom: solid 3px #c58668;
   box-shadow: 0px 10px 25px 10px hsl(0, 0%, 0%);
+  border-radius: 20px;
+}
+.create-room-face {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10000;
+  filter: brightness(120%);
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+  border-bottom: solid 3px #c58668;
+  box-shadow: 0px 10px 25px 10px hsl(0, 0%, 0%);
+  border-radius: 20px;
 }
 .fice-about {
   width: 75%;
@@ -258,27 +326,105 @@ export default {
   width: 24%;
 }
 .room {
-  /* float: left; */
-  display: flex;
   width: 100%;
   height: 100px;
-  /* margin: 0 1 0 0; */
-  /* position: relative; */
-  /* display: inline-block; */
-  /* padding: 2em; */
-  /* background: #00ff95; */
-  background-color: #ffffff;
-  border: 3px solid black;
-  border-radius: 25px;
-  /* line-height: 1.2em; */
+  display: inline-block;
+  padding: 0.5em 1em;
+  text-decoration: none;
+  border-radius: 4px;
+  color: #ffffff;
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+  border-bottom: solid 3px #c58668;
+}
+.room:active {
+  -webkit-transform: translateY(4px);
+  transform: translateY(4px);
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.2);
+  border-bottom: none;
 }
 .room:hover {
-  background-color: #a8a8a8;
+  font-weight: bold;
 }
+
+/* .room-reference { */
+/* position: absolute; */
+/* display: none; */
+/* background: #ffffff; */
+/* border: 1px solid #020203; */
+/* border-radius: 0.4em; */
+/* } */
+
+/* .room-reference:after { */
+/* content: ""; */
+/* position: absolute; */
+/* top: 0; */
+/* left: 50%; */
+/* width: 0; */
+/* height: 0; */
+/* border: 0.625em solid transparent; */
+/* border: 1px solid #020203; */
+/* border-bottom-color: #ffffff; */
+/* border-top: 0; */
+/* border-left: 0; */
+/* margin-left: -0.312em; */
+/* margin-top: -0.625em; */
+/* } */
+
 .room-reference {
   display: none;
+  position: relative;
+  width: 24%;
+  background: #ff9408;
+  border: 2px solid #a16b00;
+}
+.room-reference:after,
+.room-reference:before {
+  bottom: 100%;
+  left: 50%;
+  border: solid transparent;
+  content: "";
+  height: 0;
+  width: 0;
+  position: absolute;
+  pointer-events: none;
+}
+.room-reference:after {
+  border-color: rgba(255, 148, 8, 0);
+  border-bottom-color: #ff9408;
+  border-width: 30px;
+  margin-left: -30px;
+}
+.room-reference:before {
+  border-color: rgba(161, 107, 0, 0);
+  border-bottom-color: #a16b00;
+  border-width: 33px;
+  margin-left: -33px;
 }
 .room:hover + .room-reference {
+  position: absolute;
   display: block;
+}
+
+.search {
+  width: 50%;
+}
+.create {
+  width: 50%;
+}
+.footer-button {
+  height: 50px;
+  background: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+}
+.footer-button:hover {
+  font-weight: bold;
+  color: #fff;
+}
+footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: black;
 }
 </style>

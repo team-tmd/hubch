@@ -54,7 +54,6 @@ export default {
   justify-content: space-between;
   align-items: stretch;
   background-color: black;
-  border-radius: 10px;
 }
 .nav__link {
   display: flex;
@@ -79,22 +78,20 @@ export default {
 }
 .nav__item {
   width: 100px;
-  /* border-left: 1px solid #eee; */
-  border-left: 1px solid rgb(51, 51, 51);
+  border-left: 1px solid rgb(50, 50, 50);
 }
 .rounded {
+  border: 2px solid rgb(255, 255, 255);
   border-radius: 50px;
   height: 40px;
   width: 40px;
-  opacity: 60%;
+  opacity: 70%;
 }
 .rounded:hover {
   border-radius: 50px;
   height: 50px;
   width: 50px;
-  /* border: white; */
   opacity: 100%;
-  border: 1px solid white;
 }
 .nav__my-page {
   display: flex;
