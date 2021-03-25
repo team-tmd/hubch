@@ -2,10 +2,10 @@
   <div class="page">
     <section v-for="message in messages" :key="message.id" class="item">
       <!-- ニックネームを設定している場合 -> nicknameを表示 -->
-      <div v-if="message.nickname">
-        {{ message.nickname }}
+      <div v-if="message.userNickname">
+        {{ message.userNickname }}
       </div>
-
+      <img class="rounded" :src="message.userImage" alt="" />
       <!-- メッセージがテキストの場合 -> テキストを表示 -->
       <div v-if="message.text">
         <div class="item-message">{{ message.text }}</div>
@@ -55,49 +55,21 @@ export default {
       this.currentUser = user ? user : {}
     })
 
-    ///チャットの表示（onSnapshotoで変化を監視）
-    const col_rooms = firebase
+    firebase
       .firestore()
       .collection("rooms")
       .doc(this.$route.params.id)
       .collection("messages")
       .orderBy("timestamp")
-
-    col_rooms.onSnapshot((snapshot) => {
-      // messages の初期化
-      this.messages = []
-      snapshot.docs.forEach((messageDoc) => {
-        // messages の userId から そのユーザーが nickname を設定しているか調査
-        // .doc(messageDoc.data().userId)で判断している
-        firebase
-          .firestore()
-          .collection("myNicknames")
-          .doc(messageDoc.data().userId)
-          .get()
-          .then((doc) => {
-            if (doc.data()) {
-              // nickname を設定している場合 => messages に保存
-              this.messages.push({
-                id: messageDoc.id,
-                nickname: doc.data().myNickname,
-                ...messageDoc.data(),
-              })
-            } else {
-              // nickname を設定していない場合 => messages に""を保存
-              this.messages.push({
-                id: messageDoc.id,
-                nickname: "",
-                ...messageDoc.data(),
-              })
-            }
+      .onSnapshot((snapshot) => {
+        this.messages.length = 0
+        snapshot.docs.forEach((doc) => {
+          this.messages.push({
+            id: doc.id,
+            ...doc.data(),
           })
-          .then(() => {
-            this.messages = this.sortedMessagesByTimestamp()
-            // console.log(this.messages)
-            this.scrollBottom()
-          })
+        })
       })
-    })
   },
 
   methods: {
@@ -127,15 +99,28 @@ export default {
           .collection("rooms")
           .doc(this.$route.params.id)
           .collection("messages")
+        let getUserNickname = ""
+        let getUserImage = ""
 
-        const newMessage = {
-          userId: this.currentUser.uid,
-          text: this.inputMessage,
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-        }
-
-        quary
-          .add(newMessage)
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(this.currentUser.uid)
+          .get()
+          .then((userSnapshot) => {
+            getUserNickname = userSnapshot.data().myNickname
+            getUserImage = userSnapshot.data().userImage
+            // userProfileFigure = userSnapshot.data().myNickname
+          })
+          .then(() => {
+            quary.add({
+              userId: this.currentUser.uid,
+              userImage: getUserImage,
+              userNickname: getUserNickname,
+              text: this.inputMessage,
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+            })
+          })
           .catch(function(error) {
             console.error("Error writing new message to database", error)
           })
@@ -173,6 +158,11 @@ export default {
 </script>
 
 <style scoped>
+.rounded {
+  height: 50px;
+  width: 50px;
+  border-radius: 50px;
+}
 .item {
   position: relative;
   display: flex;

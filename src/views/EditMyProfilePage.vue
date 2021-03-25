@@ -33,13 +33,14 @@ export default {
         const myNickname = {
           userId: this.user.uid,
           myNickname: this.newMyNickname,
+          userImage: this.user.photoURL,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
         // ニックネームを保存
         firebase
           .firestore()
-          .collection("myNicknames")
+          .collection("users")
           .doc(this.user.uid)
           .set(myNickname)
           .then((ref) => {
@@ -72,7 +73,7 @@ export default {
         // ニックネームを取得
         firebase
           .firestore()
-          .collection("myNicknames")
+          .collection("users")
           .doc(this.user.uid)
           .get()
           .then((doc) => {

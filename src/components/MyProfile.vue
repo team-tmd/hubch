@@ -56,7 +56,7 @@ export default {
         // ニックネームを取得
         firebase
           .firestore()
-          .collection("myNicknames")
+          .collection("users")
           .doc(this.user.uid)
           .get()
           .then((doc) => {

@@ -68,7 +68,7 @@
     <div class="room-list" v-for="room in rooms" :key="room.id">
       <a class="room room-title" @click="toChatRoom(room.id, room.title)">
         {{ room.title }}
-        <div class="delete-button" @click="deleteRoom">X</div>
+        <!-- <div class="delete-button" @click="deleteRoom">X</div> -->
       </a>
       <a class="room-reference">
         owner <br />
@@ -212,22 +212,22 @@ export default {
       if (this.newRoomTitle.length) {
         const quary = firebase.firestore().collection("rooms")
         const valuetKeyward = this.keyward
-        let userNickname = ""
+        let getUserNickname = ""
         // let userProfileFigure = ""
 
         firebase
           .firestore()
-          .collection("myNicknames")
+          .collection("users")
           .doc(this.currentUser.uid)
           .get()
           .then((userSnapshot) => {
-            userNickname = userSnapshot.data().myNickname
+            getUserNickname = userSnapshot.data().myNickname
             // userProfileFigure = userSnapshot.data().myNickname
           })
           .then(() => {
             quary
               .add({
-                owner: userNickname,
+                owner: getUserNickname,
                 ownerID: this.currentUser.uid,
                 title: this.newRoomTitle,
                 about: this.newRoomAbout,
