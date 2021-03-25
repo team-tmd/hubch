@@ -72,6 +72,7 @@
       </a>
       <a class="room-reference">
         owner <br />
+        <img class="room-reference-img" :src="room.ownerImage" alt="" />
         {{ room.owner }} <br />
         about <br />
         {{ room.about }} <br />
@@ -213,7 +214,7 @@ export default {
         const quary = firebase.firestore().collection("rooms")
         const valuetKeyward = this.keyward
         let getUserNickname = ""
-        // let userProfileFigure = ""
+        let getUserImage = ""
 
         firebase
           .firestore()
@@ -222,13 +223,14 @@ export default {
           .get()
           .then((userSnapshot) => {
             getUserNickname = userSnapshot.data().myNickname
-            // userProfileFigure = userSnapshot.data().myNickname
+            getUserImage = userSnapshot.data().userImage
           })
           .then(() => {
             quary
               .add({
                 owner: getUserNickname,
                 ownerID: this.currentUser.uid,
+                ownerImage: getUserImage,
                 title: this.newRoomTitle,
                 about: this.newRoomAbout,
                 keyward: valuetKeyward,
@@ -399,6 +401,11 @@ export default {
 .room:hover + .room-reference {
   position: absolute;
   display: block;
+}
+.room-reference-img {
+  height: 20px;
+  width: 20px;
+  border-radius: 50px;
 }
 
 .search {

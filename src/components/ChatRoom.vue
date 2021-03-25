@@ -170,7 +170,6 @@ export default {
         .then((userSnapshot) => {
           getUserNickname = userSnapshot.data().myNickname
           getUserImage = userSnapshot.data().userImage
-          // userProfileFigure = userSnapshot.data().myNickname
         })
         .then(() => {
           strageRef.put(file).then((fileSnapshot) =>
