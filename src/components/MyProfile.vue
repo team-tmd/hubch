@@ -3,7 +3,9 @@
     <h1>This is my page</h1>
     <button v-on:click="signOut">ログアウトする</button>
     <h2>ログインしているユーザー情報</h2>
+
     <img :src="user.photoURL" class="rounded" />
+
     <div>Googleアカウント：{{ user.email }}</div>
     <div>ユーザー名：{{ user.displayName }}</div>
 
@@ -31,6 +33,7 @@ export default {
     return {
       user: {},
       myNickname: "",
+      myImageURL: "",
     }
   },
   methods: {
@@ -62,6 +65,7 @@ export default {
           .then((doc) => {
             if (doc.data()) {
               this.myNickname = doc.data().myNickname
+              this.myImageURL = doc.data().myImageURL
             }
           })
       }

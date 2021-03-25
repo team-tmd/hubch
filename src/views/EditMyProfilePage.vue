@@ -2,7 +2,12 @@
   <div class="edit-my-profile page">
     <h1>This is my page</h1>
     <h2>ログインしているユーザー情報</h2>
-    <img :src="user.photoURL" class="rounded" />
+    <div v-if="user.myImageURL">
+      <img :src="user.myImageURL" class="rounded" />
+    </div>
+    <div v-else>
+      <img :src="user.photoURL" class="rounded" />
+    </div>
     <div>Googleアカウント：{{ user.email }}</div>
     <div>ユーザー名：{{ user.displayName }}</div>
     <div>
