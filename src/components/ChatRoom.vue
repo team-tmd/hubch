@@ -1,24 +1,31 @@
 <template>
   <div class="main-field">
-    <section
-      id="chat"
-      v-for="message in messages"
-      :key="message.id"
-      class="item"
-    >
-      <img class="rounded" :src="message.userImage" alt="" />
-      <div class="log-right">
-        <!-- ニックネームを設定している場合 -> nicknameを表示 -->
-        <div class="log-name" v-if="message.userNickname">
-          {{ message.userNickname }} <br />
-        </div>
+    <section v-for="message in messages" :key="message.id" class="item">
+      <div class="myMessage" v-if="message.orMyMessage === true">
         <!-- メッセージがテキストの場合 -> テキストを表示 -->
         <div v-if="message.text">
-          <div class="item-message">{{ message.text }}</div>
+          <div class="item-myMessage">{{ message.text }}</div>
         </div>
         <!-- メッセージが画像の場合 -> 画像を表示 -->
         <div v-if="message.imageURL">
-          <img class="item-image" :src="message.imageURL" />
+          <img class="item-myImage" :src="message.imageURL" />
+        </div>
+      </div>
+      <div v-else class="otherMessage">
+        <img class="rounded" :src="message.userImage" alt="" />
+        <div class="log-right">
+          <!-- ニックネームを設定している場合 -> nicknameを表示 -->
+          <div class="log-name" v-if="message.userNickname">
+            {{ message.userNickname }} <br />
+          </div>
+          <!-- メッセージがテキストの場合 -> テキストを表示 -->
+          <div v-if="message.text">
+            <div class="item-otherMessage">{{ message.text }}</div>
+          </div>
+          <!-- メッセージが画像の場合 -> 画像を表示 -->
+          <div v-if="message.imageURL">
+            <img class="item-otherImage" :src="message.imageURL" />
+          </div>
         </div>
       </div>
     </section>
@@ -26,17 +33,19 @@
     <footer>
       <div class="input-tab">
         <!-- テキストの入力タブ -->
-        <form action="" @submit.prevent="sendMessage">
+        <form class="inputTextArea" action="" @submit.prevent="sendMessage">
           <textarea
+            class="textArea"
             v-model="inputMessage"
             @keydown.enter.exact.prevent="sendMessage"
             cols="50"
-            rows="1"
+            rows="3"
           ></textarea>
-          <button type="submit">Send message</button>
+          <button class="inputTextButom" type="submit">Send message</button>
         </form>
         <!-- 画像の入力タブ -->
         <input
+          class="inputImageButom"
           type="file"
           ref="inputFile"
           accept="image/*"
@@ -65,6 +74,7 @@ export default {
     }
   },
 
+  // created() {
   created() {
     // ログイン状態を識別
     firebase.auth().onAuthStateChanged((user) => {
@@ -80,11 +90,24 @@ export default {
       .onSnapshot((snapshot) => {
         this.messages.length = 0
         snapshot.docs.forEach((doc) => {
-          this.messages.push({
-            id: doc.id,
-            ...doc.data(),
-          })
+          if (this.currentUser.uid == doc.data().userId) {
+            this.messages.push({
+              id: doc.id,
+              orMyMessage: true,
+              ...doc.data(),
+            })
+          } else {
+            this.messages.push({
+              id: doc.id,
+              orMyMessage: false,
+              ...doc.data(),
+            })
+          }
         })
+        //一番下にスクロール
+        this.scrollBottom()
+        // アクションを起こすことで強制的にラグ(lag)をなくす
+        this.messages.splice()
       })
   },
 
@@ -100,12 +123,12 @@ export default {
       })
     },
 
-    // スクロール位置を一番下に移動
-    // scrollBottom() {
-    //   this.$nextTick(() => {
-    //     window.scrollTo(0, document.body.clientHeight)
-    //   })
-    // },
+    //スクロール位置を一番下に移動
+    scrollBottom() {
+      this.$nextTick(() => {
+        window.scrollTo(0, document.body.clientHeight)
+      })
+    },
 
     //送信されたテキストをfiresoreに追加
     sendMessage() {
@@ -144,7 +167,6 @@ export default {
             this.inputMessage = ""
           })
       }
-      this.scrollBottom()
     },
 
     //送信された画像をStorageに追加
@@ -207,11 +229,9 @@ export default {
   background-image: linear-gradient(45deg, #000000 0%, #6e6e6e 100%);
 }
 .rounded {
-  height: 50px;
-  width: 50px;
+  height: 60px;
+  width: 60px;
   border-radius: 50px;
-}
-.log-right {
 }
 .log-name {
   color: #f5f5f5;
@@ -222,15 +242,36 @@ export default {
   align-items: flex-end;
   margin-bottom: 0.8em;
 }
-.item-message {
+.myMessage {
+  width: 100%;
+}
+.item-myMessage {
   position: relative;
-  display: inline-block;
+  /* display: inline-block; */
+  float: right;
+  padding: 0.8em;
+  background-color: hsl(32, 100%, 50%);
+  border-radius: 4px;
+  line-height: 1.2em;
+}
+.item-myImage {
+  width: 25%;
+  height: 25%;
+  float: right;
+}
+.otherMessage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.item-otherMessage {
+  position: relative;
   padding: 0.8em;
   background: #deefe8;
   border-radius: 4px;
   line-height: 1.2em;
 }
-.item-image {
+.item-otherImage {
   width: 50%;
   height: 50%;
 }
@@ -252,6 +293,15 @@ footer {
   background-color: black;
 }
 .input-tab {
-  text-align: center;
+  /* display: flex;
+  text-align: center; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.inputTextArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

@@ -159,13 +159,13 @@ export default {
     //Room検索結果の表示（キーワード検索）
     searchRoom() {
       const quary = firebase.firestore().collection("rooms")
-      const valuetKeyward = this.keyward
+      const valueKeyward = this.keyward
       this.rooms.length = 0
 
       // 「キーワード指定」で検索した時の処理
       if (this.keyward != "") {
         quary
-          .where("keyward", "==", valuetKeyward)
+          .where("keyward", "==", valueKeyward)
           .get()
           .then((snapshot) => {
             snapshot.forEach((doc) => {
@@ -175,6 +175,8 @@ export default {
               })
             })
           })
+        // アクションを起こすことで強制的にラグ(lag)をなくす
+        this.rooms.splice()
       }
       // 「指定なし」で検索を実行するとタイムスタンプ順で「全て」表示
       else {
@@ -259,12 +261,14 @@ export default {
       this.orCreateNewRoom = false
     },
 
-    //deleteRoom() {
-    //firebase.firestore().collection("rooms").delete
-    //.catch((error) => {
-    //   console.error("Error removing document: ", error)
-    // })
-    //},
+    deleteRoom() {
+      firebase
+        .firestore()
+        .collection("rooms")
+        .delete.catch((error) => {
+          console.error("Error removing document: ", error)
+        })
+    },
   },
 }
 </script>
