@@ -293,8 +293,6 @@ footer {
   background-color: black;
 }
 .input-tab {
-  /* display: flex;
-  text-align: center; */
   display: flex;
   justify-content: center;
   align-items: center;
