@@ -69,18 +69,24 @@
         {{ room.title }}
         <!-- <div class="delete-button" @click="deleteRoom">X</div> -->
       </a>
-      <a class="room-reference">
+      <div class="room-reference">
         owner <br />
         <div class="owner">
           <img class="room-reference-img" :src="room.ownerImage" alt="" />
           {{ room.owner }}
         </div>
         <br />
-        about <br />
-        {{ room.about }} <br />
-        keward <br />
-        {{ room.keyward }} <br />
-      </a>
+        <div class="about">
+          about <br />
+          {{ room.about }}
+        </div>
+        <br />
+        <div class="keward">
+          keward <br />
+          {{ room.keyward }}
+        </div>
+        <br />
+      </div>
     </div>
     <!-- </div> -->
     <!-- <div v-else>該当するルームは見つかりませんでした</div> -->
@@ -303,6 +309,7 @@ export default {
 }
 .do-button:hover {
   font-weight: bold;
+  background-image: linear-gradient(45deg, #6b5000 0%, #633624 100%);
 }
 .do-button:active {
   -webkit-transform: translateY(4px);
@@ -377,8 +384,11 @@ export default {
   display: none;
   position: relative;
   width: 24%;
-  background: #ff9408;
-  border: 2px solid #a16b00;
+  color: rgb(255, 94, 0);
+  background-image: linear-gradient(45deg, #494949 0%, #000000 100%);
+  border: 2px solid rgb(255, 94, 0);
+  /* display: flex; */
+  flex-direction: column;
 }
 .room-reference:after,
 .room-reference:before {
@@ -393,13 +403,14 @@ export default {
 }
 .room-reference:after {
   border-color: rgba(255, 148, 8, 0);
-  border-bottom-color: #ff9408;
+  /* border-bottom-color: #ff9408; */
+  background-image: linear-gradient(45deg, #494949 0%, #000000 100%);
   border-width: 30px;
   margin-left: -30px;
 }
 .room-reference:before {
   border-color: rgba(161, 107, 0, 0);
-  border-bottom-color: #a16b00;
+  border-bottom-color: rgb(255, 94, 0);
   border-width: 33px;
   margin-left: -33px;
 }
@@ -409,9 +420,17 @@ export default {
 }
 .owner {
   float: left;
-  display: flex;
+  /* display: flex; */
   justify-content: center;
   align-items: center;
+}
+.about {
+  /* display: flex; */
+  float: left;
+}
+.keyward {
+  /* display: flex; */
+  float: left;
 }
 .room-reference-img {
   height: 20px;
@@ -428,12 +447,12 @@ export default {
 .footer-button {
   height: 50px;
   background: rgb(0, 0, 0);
-  border: 1px solid rgb(50, 50, 50);
-  color: rgb(255, 255, 255);
+  border: 2px solid rgb(255, 94, 0);
+  color: rgb(255, 94, 0);
 }
 .footer-button:hover {
   font-weight: bold;
-  color: #fff;
+  color: rgb(255, 94, 0);
 }
 footer {
   position: fixed;

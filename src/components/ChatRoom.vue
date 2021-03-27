@@ -1,5 +1,7 @@
 <template>
   <div class="main-field">
+    <!-- 自分のチャット -->
+    <header class="roomTitle">Room：{{ this.$route.params.title }}</header>
     <section v-for="message in messages" :key="message.id" class="item">
       <div class="myMessage" v-if="message.orMyMessage === true">
         <!-- メッセージがテキストの場合 -> テキストを表示 -->
@@ -11,19 +13,28 @@
           <img class="item-myImage" :src="message.imageURL" />
         </div>
       </div>
-      <div v-else class="otherMessage">
-        <img class="rounded" :src="message.userImage" alt="" />
-        <div class="log-right">
-          <!-- ニックネームを設定している場合 -> nicknameを表示 -->
-          <div class="log-name" v-if="message.userNickname">
-            {{ message.userNickname }} <br />
-          </div>
-          <!-- メッセージがテキストの場合 -> テキストを表示 -->
-          <div v-if="message.text">
+
+      <!-- 自分以外のチャット -->
+      <div v-else>
+        <div class="otherMessageText" v-if="message.text">
+          <img class="rounded" :src="message.userImage" alt="" />
+          <div class="log-right">
+            <!-- ニックネームを設定している場合 -> nicknameを表示 -->
+            <div class="log-name" v-if="message.userNickname">
+              {{ message.userNickname }} <br />
+            </div>
+            <!-- メッセージがテキストの場合 -> テキストを表示 -->
             <div class="item-otherMessage">{{ message.text }}</div>
           </div>
-          <!-- メッセージが画像の場合 -> 画像を表示 -->
-          <div v-if="message.imageURL">
+        </div>
+        <!-- メッセージが画像の場合 -> 画像を表示 -->
+        <div class="otherMessageImage" v-if="message.imageURL">
+          <img class="rounded" :src="message.userImage" alt="" />
+          <div class="log-right">
+            <!-- ニックネームを設定している場合 -> nicknameを表示 -->
+            <div class="log-name" v-if="message.userNickname">
+              {{ message.userNickname }} <br />
+            </div>
             <img class="item-otherImage" :src="message.imageURL" />
           </div>
         </div>
@@ -47,18 +58,22 @@
           </button>
         </form>
         <!-- 画像の入力タブ -->
-        <label for="inputImageButton">
-          Send <br />
-          Image
-          <input
-            id="inputImageButton"
-            class="inputImageButom"
-            type="file"
-            ref="inputFile"
-            accept="image/*"
-            @change="sendImage"
-          />
-        </label>
+        <div class="imageButton">
+          <label for="inputImageButton">
+            <div class="buttonText">
+              Send <br />
+              Image
+            </div>
+            <input
+              id="inputImageButton"
+              class="inputImageButom"
+              type="file"
+              ref="inputFile"
+              accept="image/*"
+              @change="sendImage"
+            />
+          </label>
+        </div>
       </div>
     </footer>
   </div>
@@ -227,6 +242,14 @@ export default {
 </script>
 
 <style scoped>
+header {
+  left: 43%;
+  margin-right: -50%;
+  position: fixed;
+  color: rgb(255, 94, 0);
+  font-size: 30px;
+  font-weight: bold;
+}
 .main-field {
   min-height: 100vh; /* ←コンテンツの高さの最小値＝ブラウザの高さに指定 */
   position: relative; /* ←相対位置 */
@@ -255,33 +278,37 @@ export default {
 }
 .item-myMessage {
   position: relative;
-  /* display: inline-block; */
   float: right;
+  margin-right: 5px;
   padding: 0.8em;
-  background-color: hsl(32, 100%, 50%);
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
   border-radius: 4px;
   line-height: 1.2em;
 }
 .item-myImage {
-  width: 25%;
-  height: 25%;
+  width: 20%;
   float: right;
+  margin-right: 5px;
 }
-.otherMessage {
+.otherMessageText {
   display: flex;
   justify-content: center;
   align-items: center;
 }
+.otherMessageImage {
+  display: flex;
+}
 .item-otherMessage {
   position: relative;
   padding: 0.8em;
-  background: #deefe8;
+  background-image: linear-gradient(45deg, #deefe8 0%, #7bdbb3 100%);
   border-radius: 4px;
   line-height: 1.2em;
+  margin-left: 5px;
 }
 .item-otherImage {
   width: 50%;
-  height: 50%;
+  margin-left: 5px;
 }
 .form {
   position: fixed;
@@ -299,11 +326,17 @@ footer {
   bottom: 0;
   width: 100%;
   background-color: black;
+  border: 2px solid rgb(255, 94, 0);
 }
 .input-tab {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.textArea {
+  height: 50px;
+  border-left: 2px solid rgb(255, 94, 0);
+  border-right: 2px solid rgb(255, 94, 0);
 }
 .inputTextArea {
   display: flex;
@@ -311,23 +344,31 @@ footer {
   align-items: center;
 }
 .inputTextButom {
+  font-size: 15px;
   height: 50px;
-  width: 50px;
-  border-radius: 10px;
-  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
-  align-items: center;
+  width: 70px;
+  background-color: black;
+  color: rgb(255, 94, 0);
+  border: 2px solid rgb(255, 94, 0);
+}
+.inputTextButom:hover {
+  font-weight: bold;
 }
 .inputImageButom {
   display: none;
 }
-label {
+.imageButton {
+  font-size: 15px;
   height: 50px;
-  width: 50px;
-  border-radius: 10px;
-  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
-  align-items: center;
+  width: 70px;
+  color: rgb(255, 94, 0);
+  border: 2px solid rgb(255, 94, 0);
+}
+.buttonText {
+  margin-top: 5px;
+  margin-left: 13px;
 }
 label:hover {
-  background-color: hsl(32, 92%, 31%);
+  font-weight: bold;
 }
 </style>
