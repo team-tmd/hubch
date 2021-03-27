@@ -1,6 +1,7 @@
 <template>
   <div class="main-field">
-    <header class="roomTitle">{{ this.$route.params.title }}</header>
+    <!-- 自分のチャット -->
+    <header class="roomTitle">Room：{{ this.$route.params.title }}</header>
     <section v-for="message in messages" :key="message.id" class="item">
       <div class="myMessage" v-if="message.orMyMessage === true">
         <!-- メッセージがテキストの場合 -> テキストを表示 -->
@@ -12,19 +13,28 @@
           <img class="item-myImage" :src="message.imageURL" />
         </div>
       </div>
-      <div v-else class="otherMessage">
-        <img class="rounded" :src="message.userImage" alt="" />
-        <div class="log-right">
-          <!-- ニックネームを設定している場合 -> nicknameを表示 -->
-          <div class="log-name" v-if="message.userNickname">
-            {{ message.userNickname }} <br />
-          </div>
-          <!-- メッセージがテキストの場合 -> テキストを表示 -->
-          <div v-if="message.text">
+
+      <!-- 自分以外のチャット -->
+      <div v-else>
+        <div class="otherMessageText" v-if="message.text">
+          <img class="rounded" :src="message.userImage" alt="" />
+          <div class="log-right">
+            <!-- ニックネームを設定している場合 -> nicknameを表示 -->
+            <div class="log-name" v-if="message.userNickname">
+              {{ message.userNickname }} <br />
+            </div>
+            <!-- メッセージがテキストの場合 -> テキストを表示 -->
             <div class="item-otherMessage">{{ message.text }}</div>
           </div>
-          <!-- メッセージが画像の場合 -> 画像を表示 -->
-          <div v-if="message.imageURL">
+        </div>
+        <!-- メッセージが画像の場合 -> 画像を表示 -->
+        <div class="otherMessageImage" v-if="message.imageURL">
+          <img class="rounded" :src="message.userImage" alt="" />
+          <div class="log-right">
+            <!-- ニックネームを設定している場合 -> nicknameを表示 -->
+            <div class="log-name" v-if="message.userNickname">
+              {{ message.userNickname }} <br />
+            </div>
             <img class="item-otherImage" :src="message.imageURL" />
           </div>
         </div>
@@ -233,11 +243,11 @@ export default {
 
 <style scoped>
 header {
-  left: 50%;
+  left: 43%;
   margin-right: -50%;
   position: fixed;
   color: rgb(255, 94, 0);
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
 }
 .main-field {
@@ -268,22 +278,26 @@ header {
 }
 .item-myMessage {
   position: relative;
-  /* display: inline-block; */
   float: right;
+  margin-right: 5px;
   padding: 0.8em;
   background-color: hsl(32, 100%, 50%);
   border-radius: 4px;
   line-height: 1.2em;
 }
 .item-myImage {
-  width: 25%;
-  height: 25%;
+  width: 20%;
   float: right;
+  margin-right: 5px;
 }
-.otherMessage {
+.otherMessageText {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-left: 5px;
+}
+.otherMessageImage {
+  display: flex;
 }
 .item-otherMessage {
   position: relative;
@@ -291,10 +305,11 @@ header {
   background: #deefe8;
   border-radius: 4px;
   line-height: 1.2em;
+  margin-left: 5px;
 }
 .item-otherImage {
   width: 50%;
-  height: 50%;
+  margin-left: 5px;
 }
 .form {
   position: fixed;
@@ -318,6 +333,11 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.textArea {
+  height: 50px;
+  border-left: 2px solid rgb(255, 94, 0);
+  border-right: 2px solid rgb(255, 94, 0);
 }
 .inputTextArea {
   display: flex;
