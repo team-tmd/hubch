@@ -2,7 +2,12 @@
   <div class="edit-my-profile page">
     <h1>This is my page</h1>
     <h2>ログインしているユーザー情報</h2>
-    <img :src="user.photoURL" class="rounded" />
+    <div v-if="user.myImageURL">
+      <img :src="user.myImageURL" class="rounded" />
+    </div>
+    <div v-else>
+      <img :src="user.photoURL" class="rounded" />
+    </div>
     <div>Googleアカウント：{{ user.email }}</div>
     <div>ユーザー名：{{ user.displayName }}</div>
     <div>
@@ -33,13 +38,14 @@ export default {
         const myNickname = {
           userId: this.user.uid,
           myNickname: this.newMyNickname,
+          userImage: this.user.photoURL,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         }
 
         // ニックネームを保存
         firebase
           .firestore()
-          .collection("myNicknames")
+          .collection("users")
           .doc(this.user.uid)
           .set(myNickname)
           .then((ref) => {
@@ -72,7 +78,7 @@ export default {
         // ニックネームを取得
         firebase
           .firestore()
-          .collection("myNicknames")
+          .collection("users")
           .doc(this.user.uid)
           .get()
           .then((doc) => {
