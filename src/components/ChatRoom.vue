@@ -281,7 +281,7 @@ header {
   float: right;
   margin-right: 5px;
   padding: 0.8em;
-  background-color: hsl(32, 100%, 50%);
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
   border-radius: 4px;
   line-height: 1.2em;
 }
@@ -294,7 +294,6 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-left: 5px;
 }
 .otherMessageImage {
   display: flex;
@@ -302,7 +301,7 @@ header {
 .item-otherMessage {
   position: relative;
   padding: 0.8em;
-  background: #deefe8;
+  background-image: linear-gradient(45deg, #deefe8 0%, #7bdbb3 100%);
   border-radius: 4px;
   line-height: 1.2em;
   margin-left: 5px;
