@@ -41,16 +41,24 @@
             cols="50"
             rows="3"
           ></textarea>
-          <button class="inputTextButom" type="submit">Send message</button>
+          <button class="inputTextButom" type="submit">
+            Send <br />
+            Text
+          </button>
         </form>
         <!-- 画像の入力タブ -->
-        <input
-          class="inputImageButom"
-          type="file"
-          ref="inputFile"
-          accept="image/*"
-          @change="sendImage"
-        />
+        <label for="inputImageButton">
+          Send <br />
+          Image
+          <input
+            id="inputImageButton"
+            class="inputImageButom"
+            type="file"
+            ref="inputFile"
+            accept="image/*"
+            @change="sendImage"
+          />
+        </label>
       </div>
     </footer>
   </div>
@@ -301,5 +309,25 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.inputTextButom {
+  height: 50px;
+  width: 50px;
+  border-radius: 10px;
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+  align-items: center;
+}
+.inputImageButom {
+  display: none;
+}
+label {
+  height: 50px;
+  width: 50px;
+  border-radius: 10px;
+  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
+  align-items: center;
+}
+label:hover {
+  background-color: hsl(32, 92%, 31%);
 }
 </style>
