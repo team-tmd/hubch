@@ -1,5 +1,6 @@
 <template>
   <div class="main-field">
+    <header class="roomTitle">{{ this.$route.params.title }}</header>
     <section v-for="message in messages" :key="message.id" class="item">
       <div class="myMessage" v-if="message.orMyMessage === true">
         <!-- メッセージがテキストの場合 -> テキストを表示 -->
@@ -47,18 +48,22 @@
           </button>
         </form>
         <!-- 画像の入力タブ -->
-        <label for="inputImageButton">
-          Send <br />
-          Image
-          <input
-            id="inputImageButton"
-            class="inputImageButom"
-            type="file"
-            ref="inputFile"
-            accept="image/*"
-            @change="sendImage"
-          />
-        </label>
+        <div class="imageButton">
+          <label for="inputImageButton">
+            <div class="buttonText">
+              Send <br />
+              Image
+            </div>
+            <input
+              id="inputImageButton"
+              class="inputImageButom"
+              type="file"
+              ref="inputFile"
+              accept="image/*"
+              @change="sendImage"
+            />
+          </label>
+        </div>
       </div>
     </footer>
   </div>
@@ -227,6 +232,14 @@ export default {
 </script>
 
 <style scoped>
+header {
+  left: 50%;
+  margin-right: -50%;
+  position: fixed;
+  color: rgb(255, 94, 0);
+  font-size: 20px;
+  font-weight: bold;
+}
 .main-field {
   min-height: 100vh; /* ←コンテンツの高さの最小値＝ブラウザの高さに指定 */
   position: relative; /* ←相対位置 */
@@ -299,6 +312,7 @@ footer {
   bottom: 0;
   width: 100%;
   background-color: black;
+  border: 2px solid rgb(255, 94, 0);
 }
 .input-tab {
   display: flex;
@@ -311,23 +325,31 @@ footer {
   align-items: center;
 }
 .inputTextButom {
+  font-size: 15px;
   height: 50px;
-  width: 50px;
-  border-radius: 10px;
-  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
-  align-items: center;
+  width: 70px;
+  background-color: black;
+  color: rgb(255, 94, 0);
+  border: 2px solid rgb(255, 94, 0);
+}
+.inputTextButom:hover {
+  font-weight: bold;
 }
 .inputImageButom {
   display: none;
 }
-label {
+.imageButton {
+  font-size: 15px;
   height: 50px;
-  width: 50px;
-  border-radius: 10px;
-  background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
-  align-items: center;
+  width: 70px;
+  color: rgb(255, 94, 0);
+  border: 2px solid rgb(255, 94, 0);
+}
+.buttonText {
+  margin-top: 5px;
+  margin-left: 13px;
 }
 label:hover {
-  background-color: hsl(32, 92%, 31%);
+  font-weight: bold;
 }
 </style>
