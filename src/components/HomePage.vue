@@ -64,7 +64,6 @@
     </div>
 
     <!-- Roomリスト表示部分 -->
-    <!-- <div v-if="rooms"> -->
     <div class="room-list" v-for="room in rooms" :key="room.id">
       <a class="room room-title" @click="toChatRoom(room.id, room.title)">
         {{ room.title }}
@@ -72,8 +71,11 @@
       </a>
       <a class="room-reference">
         owner <br />
-        <img class="room-reference-img" :src="room.ownerImage" alt="" />
-        {{ room.owner }} <br />
+        <div class="owner">
+          <img class="room-reference-img" :src="room.ownerImage" alt="" />
+          {{ room.owner }}
+        </div>
+        <br />
         about <br />
         {{ room.about }} <br />
         keward <br />
@@ -142,7 +144,6 @@ export default {
     toChatRoom(roomID, roomTitle) {
       this.$router.push({
         name: "ChatRoom",
-        // params: { id: roomID, title: this.room.title, about: this.room.about },
         params: { id: roomID, title: roomTitle },
       })
     },
@@ -405,6 +406,12 @@ export default {
 .room:hover + .room-reference {
   position: absolute;
   display: block;
+}
+.owner {
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .room-reference-img {
   height: 20px;
