@@ -3,7 +3,7 @@
     <!-- Roomリスト検索部分 -->
     <div v-if="orSearchRoom">
       <div class="search-room-face" style="z-index:10000">
-        <div class="option-title">Search Room</div>
+        <div class="option-title">Search</div>
         <div class="option-content">
           <p>
             Keyword <br />
@@ -31,7 +31,7 @@
     <!-- Room作成部分 -->
     <div v-if="orCreateNewRoom">
       <div class="create-room-face">
-        <div class="option-title">Create New Room</div>
+        <div class="option-title">Create</div>
         <div class="option-content">
           <p>
             Title <br />
@@ -97,11 +97,11 @@
     <footer>
       <!-- Room「検索」ボタン -->
       <button class="search footer-button" @click="doSearchRoom">
-        Search Room
+        Search
       </button>
       <!-- Room「作成」ボタン -->
       <button class="create footer-button" @click="doCreateNewRoom">
-        create New Room
+        Create
       </button>
     </footer>
   </div>
@@ -289,7 +289,6 @@ export default {
   position: relative; /* ←相対位置 */
   padding-bottom: 60px; /* ←フッターの高さを指定 */
   box-sizing: border-box;
-  background-color: rgb(50, 50, 50);
   /* ↑ヘッダーやフッターを含むすべての要素の高さ＝min-height:100vhになるように指定 */
   background-image: linear-gradient(45deg, #000000 0%, #6e6e6e 100%);
 }
@@ -385,12 +384,10 @@ export default {
 
 .room-reference {
   display: none;
-  /* position: relative; */
   width: 24%;
   color: rgb(255, 94, 0);
   background-image: linear-gradient(45deg, #494949 0%, #000000 100%);
   border: 2px solid rgb(255, 94, 0);
-  /* display: flex; */
   flex-direction: column;
 }
 .room-reference:after,
@@ -439,6 +436,7 @@ export default {
   height: 20px;
   width: 20px;
   border-radius: 50px;
+  border: 2px solid rgb(255, 94, 0);
 }
 
 .search {
