@@ -82,7 +82,7 @@
           </div>
           <div v-else><br /></div>
         </dd>
-        <dt><u>keward</u></dt>
+        <dt><u>keyword</u></dt>
         <dd>
           <div v-if="room.keyward">
             {{ room.keyward }}
