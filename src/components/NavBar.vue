@@ -54,6 +54,7 @@ export default {
   justify-content: space-between;
   align-items: stretch;
   background-color: black;
+  border: 2px solid rgb(255, 94, 0);
 }
 .nav__link {
   display: flex;
@@ -64,11 +65,11 @@ export default {
   text-decoration: none;
 }
 .nav__link:visited {
-  color: #eee;
+  color: rgb(255, 94, 0);
 }
 .nav__link:hover {
   font-weight: bold;
-  color: #fff;
+  color: rgb(255, 94, 0);
 }
 .nav__logo {
   width: 130px;
@@ -78,12 +79,21 @@ export default {
 }
 .nav__item {
   width: 100px;
-  border-left: 1px solid #eee;
+  /* border-left: 1px solid rgb(50, 50, 50); */
+  border-left: 2px solid rgb(255, 94, 0);
 }
 .rounded {
+  border: 2px solid rgb(255, 94, 0);
   border-radius: 50px;
   height: 40px;
   width: 40px;
+  opacity: 70%;
+}
+.rounded:hover {
+  border-radius: 50px;
+  height: 50px;
+  width: 50px;
+  opacity: 100%;
 }
 .nav__my-page {
   display: flex;
