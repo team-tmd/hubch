@@ -69,24 +69,27 @@
         {{ room.title }}
         <!-- <div class="delete-button" @click="deleteRoom">X</div> -->
       </a>
-      <div class="room-reference">
-        owner <br />
-        <div class="owner">
+      <dl class="room-reference">
+        <dt><u>owner</u></dt>
+        <dd>
           <img class="room-reference-img" :src="room.ownerImage" alt="" />
           {{ room.owner }}
-        </div>
-        <br />
-        <div class="about">
-          about <br />
-          {{ room.about }}
-        </div>
-        <br />
-        <div class="keward">
-          keward <br />
-          {{ room.keyward }}
-        </div>
-        <br />
-      </div>
+        </dd>
+        <dt><u>about</u></dt>
+        <dd>
+          <div v-if="room.about">
+            {{ room.about }}
+          </div>
+          <div v-else><br /></div>
+        </dd>
+        <dt><u>keward</u></dt>
+        <dd>
+          <div v-if="room.keyward">
+            {{ room.keyward }}
+          </div>
+          <div v-else><br /></div>
+        </dd>
+      </dl>
     </div>
     <!-- </div> -->
     <!-- <div v-else>該当するルームは見つかりませんでした</div> -->
@@ -382,7 +385,7 @@ export default {
 
 .room-reference {
   display: none;
-  position: relative;
+  /* position: relative; */
   width: 24%;
   color: rgb(255, 94, 0);
   background-image: linear-gradient(45deg, #494949 0%, #000000 100%);

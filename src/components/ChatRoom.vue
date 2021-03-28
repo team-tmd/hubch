@@ -45,10 +45,16 @@
       <div class="input-tab">
         <!-- テキストの入力タブ -->
         <form class="inputTextArea" action="" @submit.prevent="sendMessage">
-          <textarea
+          <!-- <textarea
             class="textArea"
             v-model="inputMessage"
             @keydown.enter.exact.prevent="sendMessage"
+            cols="50"
+            rows="3"
+          ></textarea> -->
+          <textarea
+            class="textArea"
+            v-model="inputMessage"
             cols="50"
             rows="3"
           ></textarea>
@@ -284,6 +290,7 @@ header {
   background-image: linear-gradient(45deg, #ffc107 0%, #ff8b5f 100%);
   border-radius: 4px;
   line-height: 1.2em;
+  white-space: pre-wrap; /* 改行を表示させる */
 }
 .item-myImage {
   width: 20%;
@@ -305,6 +312,7 @@ header {
   border-radius: 4px;
   line-height: 1.2em;
   margin-left: 5px;
+  white-space: pre-wrap; /* 改行を表示させる */
 }
 .item-otherImage {
   width: 50%;
