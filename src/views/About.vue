@@ -1,8 +1,18 @@
 <template>
   <div class="about page">
-    <h1>This is an about page</h1>
+    <AboutSignIn />
   </div>
 </template>
+
+<script>
+import AboutSignIn from "../components/AboutSignIn.vue"
+
+export default {
+  components: {
+    AboutSignIn,
+  },
+}
+</script>
 
 <style scoped>
 .about {
