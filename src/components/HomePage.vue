@@ -9,8 +9,38 @@
             Keyword <br />
             <select name="keyward" v-model="keyward">
               <option value="" selected>指定なし</option>
+              <option value="旅行">旅行</option>
+              <option value="語学">語学</option>
+              <option value="ゲーム">ゲーム</option>
+              <option value="スポーツ">スポーツ</option>
+              <option value="フィットネス">フィットネス</option>
+              <option value="ファッション">ファッション</option>
+              <option value="ショッピング">ショッピング</option>
+              <option value="ライフスタイル">ライフスタイル</option>
+              <option value="エンタメ">エンタメ</option>
+              <option value="グルメ">グルメ</option>
+              <option value="映画">映画</option>
+              <option value="読書">読書</option>
+              <option value="J-POP">J-POP</option>
+              <option value="K-POP">K-POP</option>
+              <option value="洋楽">洋楽</option>
+              <option value="勉強">勉強</option>
+              <option value="学問">学問</option>
+              <option value="人生とは">人生とは</option>
+              <option value="政治経済">政治経済</option>
               <option value="スガノミクス">スガノミクス</option>
               <option value="アベノミクス">アベノミクス</option>
+              <option value="投資">投資</option>
+              <option value="プログラミング">プログラミング</option>
+              <option value="人間関係">人間関係</option>
+              <option value="恋愛">恋愛</option>
+              <option value="フリートーク">フリートーク</option>
+              <option value="すべらない話">すべらない話</option>
+              <option value="アメトーク">アメトーク</option>
+              <option value="暇つぶし">暇つぶし</option>
+              <option value="しりとり">しりとり</option>
+              <option value="黒歴史">黒歴史</option>
+              <option value="実は私">実は私...</option>
             </select>
           </p>
         </div>
@@ -44,9 +74,39 @@
           <p>
             Keyword <br />
             <select name="keyward" v-model="keyward">
-              <option value="" selected>選択してください</option>
+              <option value="" selected>指定なし</option>
+              <option value="旅行">旅行</option>
+              <option value="語学">語学</option>
+              <option value="ゲーム">ゲーム</option>
+              <option value="スポーツ">スポーツ</option>
+              <option value="フィットネス">フィットネス</option>
+              <option value="ファッション">ファッション</option>
+              <option value="ショッピング">ショッピング</option>
+              <option value="ライフスタイル">ライフスタイル</option>
+              <option value="エンタメ">エンタメ</option>
+              <option value="グルメ">グルメ</option>
+              <option value="映画">映画</option>
+              <option value="読書">読書</option>
+              <option value="J-POP">J-POP</option>
+              <option value="K-POP">K-POP</option>
+              <option value="洋楽">洋楽</option>
+              <option value="勉強">勉強</option>
+              <option value="学問">学問</option>
+              <option value="人生とは">人生とは</option>
+              <option value="政治経済">政治経済</option>
               <option value="スガノミクス">スガノミクス</option>
               <option value="アベノミクス">アベノミクス</option>
+              <option value="投資">投資</option>
+              <option value="プログラミング">プログラミング</option>
+              <option value="人間関係">人間関係</option>
+              <option value="恋愛">恋愛</option>
+              <option value="フリートーク">フリートーク</option>
+              <option value="すべらない話">すべらない話</option>
+              <option value="アメトーク">アメトーク</option>
+              <option value="暇つぶし">暇つぶし</option>
+              <option value="しりとり">しりとり</option>
+              <option value="黒歴史">黒歴史</option>
+              <option value="実は私">実は私...</option>
             </select>
           </p>
         </div>
