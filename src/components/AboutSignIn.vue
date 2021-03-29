@@ -1,6 +1,5 @@
 <template>
   <div>
-    <br />
     <h1>【HubCh の始め方】</h1>
     <br />
     <h2>サインイン</h2>
